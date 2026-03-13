@@ -1,0 +1,23 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# OAuth 令牌文件
+.gitee_token.json
+*.token.json
+
+# 环境变量文件（包含敏感信息）
+.env
+.env.local
+
+# 爬取的数据
+downloaded_repos/
+repo_files/
+demo_result.json
