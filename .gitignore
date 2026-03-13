@@ -18,6 +18,6 @@ wheels/
 .env.local
 
 # 爬取的数据
-downloaded_repos/
+output/
 repo_files/
 demo_result.json

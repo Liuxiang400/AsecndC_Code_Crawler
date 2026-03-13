@@ -90,8 +90,6 @@ api = GiteeAPI(access_token=access_token)
 
 限额：约 500 次/小时
 
-获取 Token：访问 https://gitee.com/settings/applications 创建私人令牌
-
 #### 方式三：OAuth2 授权（最高限额，推荐）
 ```bash
 python oauth_demo.py
