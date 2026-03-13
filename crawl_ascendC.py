@@ -10,9 +10,12 @@ import logging
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Tuple
 from dotenv import load_dotenv
-from gitee_api import GiteeAPI
-from gitee_crawler import GiteeCrawler
-from gitee_oauth import GiteeOAuth
+from adapters.gitee import GiteeAPI
+from adapters.gitee import GiteeCrawler
+from adapters.gitee import GiteeOAuth
+from adapters.github import GitHubAPI
+from adapters.github import GitHubCrawler
+from adapters.github import GitHubOAuth
 
 
 # 配置日志
@@ -81,9 +84,27 @@ class AscendCCrawler:
         if config:
             self.config.update(config)
 
+        # 根据平台调整默认分支名
+        platform = self.config.get('platform', 'gitee').lower()
+        if 'branch' not in config or not config.get('branch'):
+            # 如果用户没有指定分支,则根据平台设置默认分支
+            if platform == 'github':
+                self.config['branch'] = 'main'
+                logger.info("使用 GitHub 平台,默认分支: main")
+            else:
+                self.config['branch'] = 'master'
+                logger.info("使用 Gitee 平台,默认分支: master")
+
         # 初始化 API 客户端
         self.api = self._init_api()
-        self.crawler = GiteeCrawler(self.api)
+
+        # 根据平台初始化对应的 Crawler
+        if platform == 'github':
+            self.crawler = GitHubCrawler(self.api)
+            logger.info("使用 GitHub Crawler")
+        else:
+            self.crawler = GiteeCrawler(self.api)
+            logger.info("使用 Gitee Crawler")
 
         # 统计信息
         self.stats = {
@@ -91,12 +112,22 @@ class AscendCCrawler:
             'repos_crawled': 0,
             'files_crawled': 0,
             'errors': [],
-            'start_time': datetime.now()
+            'start_time': datetime.now().isoformat(),  # 存储为字符串避免序列化问题
+            'platform': platform
         }
 
-        logger.info("AscendC 爬虫初始化完成")
+        logger.info(f"AscendC 爬虫初始化完成 (平台: {platform})")
 
-    def _init_api(self) -> GiteeAPI:
+    def _init_api(self):
+        """根据平台配置初始化对应的 API 客户端"""
+        platform = self.config.get('platform', 'gitee').lower()
+
+        if platform == 'github':
+            return self._init_github_api()
+        else:
+            return self._init_gitee_api()
+
+    def _init_gitee_api(self) -> GiteeAPI:
         """初始化 Gitee API 客户端"""
         # 优先使用 OAuth
         client_id = os.getenv('GITEE_CLIENT_ID')
@@ -109,26 +140,50 @@ class AscendCCrawler:
                 scopes=['user_info', 'projects', 'pull_requests', 'issues', 'notes']
             )
             if oauth.load_from_file():
-                logger.info("使用 OAuth 令牌")
+                logger.info("使用 Gitee OAuth 令牌")
                 return GiteeAPI(oauth=oauth)
 
         # 使用 Access Token
         access_token = os.getenv('GITEE_ACCESS_TOKEN')
         if access_token:
-            logger.info("使用 Access Token")
+            logger.info("使用 Gitee Access Token")
             return GiteeAPI(access_token=access_token)
 
         # 无认证
-        logger.warning("未配置认证,使用匿名访问(速率限制较低)")
+        logger.warning("未配置 Gitee 认证,使用匿名访问(速率限制较低)")
         return GiteeAPI()
+
+    def _init_github_api(self) -> GitHubAPI:
+        """初始化 GitHub API 客户端"""
+        # 优先使用 OAuth
+        client_id = os.getenv('GITHUB_CLIENT_ID')
+        client_secret = os.getenv('GITHUB_CLIENT_SECRET')
+
+        if client_id and client_secret:
+            oauth = GitHubOAuth(
+                client_id=client_id,
+                client_secret=client_secret
+            )
+            if oauth.load_from_file():
+                logger.info("使用 GitHub OAuth 令牌")
+                return GitHubAPI(oauth=oauth)
+
+        # 使用 Access Token
+        access_token = os.getenv('GITHUB_ACCESS_TOKEN')
+        if access_token:
+            logger.info("使用 GitHub Access Token")
+            return GitHubAPI(access_token=access_token)
+
+        # 无认证
+        logger.warning("未配置 GitHub 认证,使用匿名访问(速率限制较低)")
+        return GitHubAPI()
 
     def search_ascendc_repos(
         self,
         keywords: Optional[List[str]] = None,
         language: Optional[str] = None,
         sort: str = 'stars',
-        order: str = 'desc',
-        max_pages: int = 5
+        order: str = 'desc'
     ) -> List[Dict]:
     
         keywords = keywords or self.SEARCH_KEYWORDS
@@ -208,8 +263,8 @@ class AscendCCrawler:
                     updated_date = datetime.fromisoformat(updated_str.replace('Z', '+00:00'))
                     if updated_date < cutoff_date:
                         continue
-                except:
-                    pass
+                except (ValueError, TypeError) as e:
+                    logger.debug(f"无法解析更新时间 {updated_str}: {e}")
 
             filtered.append(repo)
 
@@ -221,12 +276,23 @@ class AscendCCrawler:
         repo: str,
         output_dir: Optional[str] = None
     ) -> Optional[Dict[str, str]]:
-    
+
         output_dir = output_dir or self.config['output_dir']
 
         logger.info(f"开始爬取仓库: {owner}/{repo}")
 
         try:
+            # 首先获取仓库信息以确定默认分支
+            repo_info = self.api.get_repo(owner, repo)
+            if not repo_info:
+                logger.warning(f"⚠️  无法获取仓库信息: {owner}/{repo}")
+                return None
+
+            # 尝试检测默认分支
+            default_branch = repo_info.get('default_branch') or self.config['branch']
+            logger.info(f"仓库默认分支: {default_branch}")
+
+            # 尝试使用配置的分支
             saved_files = self.crawler.save_repo_files(
                 owner=owner,
                 repo=repo,
@@ -235,6 +301,18 @@ class AscendCCrawler:
                 max_files=self.config['max_files_per_repo'],
                 file_extensions=self.config['file_extensions']
             )
+
+            # 如果配置的分支失败，尝试使用默认分支
+            if not saved_files and self.config['branch'] != default_branch:
+                logger.info(f"配置的分支 {self.config['branch']} 未找到文件，尝试默认分支 {default_branch}")
+                saved_files = self.crawler.save_repo_files(
+                    owner=owner,
+                    repo=repo,
+                    output_dir=output_dir,
+                    branch=default_branch,
+                    max_files=self.config['max_files_per_repo'],
+                    file_extensions=self.config['file_extensions']
+                )
 
             if saved_files:
                 self.stats['repos_crawled'] += 1
@@ -294,9 +372,17 @@ class AscendCCrawler:
 
     def _save_progress(self, results: Dict, repos: List[Dict]):
         """保存爬取进度"""
+        # 确保 stats 中的 datetime 对象转换为字符串
+        stats_to_save = {}
+        for key, value in self.stats.items():
+            if isinstance(value, datetime):
+                stats_to_save[key] = value.isoformat()
+            else:
+                stats_to_save[key] = value
+
         progress_data = {
             'timestamp': datetime.now().isoformat(),
-            'stats': self.stats,
+            'stats': stats_to_save,
             'repos_info': repos,
             'results_summary': {
                 repo_name: len(files)
@@ -320,7 +406,38 @@ class AscendCCrawler:
         logger.info(f"进度已保存: {progress_file}")
 
     def generate_report(self, results: Dict[str, Dict[str, str]]) -> str:
-    
+
+        # 确保时间数据是字符串格式
+        start_time = self.stats.get('start_time')
+        end_time = self.stats.get('end_time')
+
+        if isinstance(start_time, datetime):
+            start_time = start_time.isoformat()
+        if isinstance(end_time, datetime):
+            end_time = end_time.isoformat()
+
+        # 计算时长
+        duration_seconds = 0
+        if 'start_time' in self.stats:
+            try:
+                start = self.stats['start_time']
+                if isinstance(start, str):
+                    start = datetime.fromisoformat(start)
+                end = self.stats.get('end_time', datetime.now())
+                if isinstance(end, str):
+                    end = datetime.fromisoformat(end)
+                duration_seconds = (end - start).total_seconds()
+            except Exception as e:
+                logger.warning(f"计算时长失败: {e}")
+
+        # 确保 stats 中的所有值都可以序列化
+        stats_for_report = {}
+        for key, value in self.stats.items():
+            if isinstance(value, datetime):
+                stats_for_report[key] = value.isoformat()
+            else:
+                stats_for_report[key] = value
+
         report_data = {
             'crawl_time': datetime.now().isoformat(),
             'configuration': self.config,
@@ -328,9 +445,9 @@ class AscendCCrawler:
                 'total_repos_searched': self.stats['repos_searched'],
                 'total_repos_crawled': self.stats['repos_crawled'],
                 'total_files_crawled': self.stats['files_crawled'],
-                'duration_seconds': (
-                    datetime.now() - self.stats['start_time']
-                ).total_seconds(),
+                'duration_seconds': duration_seconds,
+                'start_time': start_time,
+                'end_time': end_time,
                 'errors': self.stats['errors']
             },
             'repositories': []

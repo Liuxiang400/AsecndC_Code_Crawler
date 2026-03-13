@@ -15,6 +15,17 @@ class Config:
 
     # 默认配置
     DEFAULTS = {
+        # 平台设置 (新增)
+        'platform': 'gitee',  # 可选值: 'gitee', 'github'
+
+        # 认证设置
+        'gitee_access_token': None,
+        'gitee_client_id': None,
+        'gitee_client_secret': None,
+        'github_access_token': None,
+        'github_client_id': None,
+        'github_client_secret': None,
+
         # 爬取限制
         'max_repos': 10,
         'max_files_per_repo': 100,
@@ -30,7 +41,7 @@ class Config:
             '.c', '.h', '.hpp', '.json',
             '.yaml', '.yml'
         ],
-        'branch': 'master',
+        'branch': 'master',  # GitHub 默认使用 'main'
 
         # 输出设置
         'output_dir': 'output/ascendc',
@@ -64,6 +75,12 @@ class Config:
 
     def _validate_and_update(self, config_dict: Dict):
         """验证并更新配置"""
+        # 验证平台设置
+        if 'platform' in config_dict:
+            if config_dict['platform'] not in ['gitee', 'github']:
+                raise ValueError("platform 必须是 'gitee' 或 'github'")
+            self.config['platform'] = config_dict['platform']
+
         # 验证数值范围
         numeric_fields = {
             'max_repos': (1, 1000),
@@ -181,6 +198,20 @@ class Config:
         从环境变量加载配置
 
         支持的环境变量:
+        平台设置:
+        - CRAWL_PLATFORM: 平台选择 (gitee/github)
+
+        Gitee 认证:
+        - GITEE_ACCESS_TOKEN: Gitee 访问令牌
+        - GITEE_CLIENT_ID: Gitee OAuth 客户端ID
+        - GITEE_CLIENT_SECRET: Gitee OAuth 客户端密钥
+
+        GitHub 认证:
+        - GITHUB_ACCESS_TOKEN: GitHub 访问令牌
+        - GITHUB_CLIENT_ID: GitHub OAuth 客户端ID
+        - GITHUB_CLIENT_SECRET: GitHub OAuth 客户端密钥
+
+        爬虫设置:
         - ASCENDC_MAX_REPOS: 最大仓库数
         - ASCENDC_MAX_FILES: 每个仓库最大文件数
         - ASCENDC_MIN_STARS: 最小 stars 数
@@ -192,6 +223,26 @@ class Config:
         """
         config_dict = {}
 
+        # 平台设置
+        platform = os.getenv('CRAWL_PLATFORM', '').lower()
+        if platform in ['gitee', 'github']:
+            config_dict['platform'] = platform
+
+        # 认证设置
+        if os.getenv('GITEE_ACCESS_TOKEN'):
+            config_dict['gitee_access_token'] = os.getenv('GITEE_ACCESS_TOKEN')
+        if os.getenv('GITEE_CLIENT_ID'):
+            config_dict['gitee_client_id'] = os.getenv('GITEE_CLIENT_ID')
+        if os.getenv('GITEE_CLIENT_SECRET'):
+            config_dict['gitee_client_secret'] = os.getenv('GITEE_CLIENT_SECRET')
+        if os.getenv('GITHUB_ACCESS_TOKEN'):
+            config_dict['github_access_token'] = os.getenv('GITHUB_ACCESS_TOKEN')
+        if os.getenv('GITHUB_CLIENT_ID'):
+            config_dict['github_client_id'] = os.getenv('GITHUB_CLIENT_ID')
+        if os.getenv('GITHUB_CLIENT_SECRET'):
+            config_dict['github_client_secret'] = os.getenv('GITHUB_CLIENT_SECRET')
+
+        # 爬虫设置
         env_mappings = {
             'ASCENDC_MAX_REPOS': 'max_repos',
             'ASCENDC_MAX_FILES': 'max_files_per_repo',

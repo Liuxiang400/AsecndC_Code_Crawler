@@ -48,3 +48,349 @@
 2026-03-13 18:37:11 - AscendCCrawler - INFO - 搜索关键词: 昇腾
 2026-03-13 18:37:22 - AscendCCrawler - INFO - 关键词 '昇腾' 找到 0 个符合条件的仓库
 2026-03-13 18:37:22 - AscendCCrawler - INFO - 搜索完成,共找到 0 个仓库
+2026-03-13 19:33:58 - AscendCCrawler - INFO - 使用 OAuth 令牌
+2026-03-13 19:33:58 - AscendCCrawler - INFO - AscendC 爬虫初始化完成
+2026-03-13 19:33:58 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库...
+2026-03-13 19:33:58 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC']
+2026-03-13 19:33:58 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-13 19:34:09 - AscendCCrawler - INFO - 关键词 'AscendC' 找到 0 个符合条件的仓库
+2026-03-13 19:34:09 - AscendCCrawler - INFO - 搜索完成,共找到 0 个仓库
+2026-03-13 19:39:46 - AscendCCrawler - INFO - 使用 GitHub 平台,默认分支: main
+2026-03-13 19:39:46 - AscendCCrawler - INFO - 使用 GitHub Access Token
+2026-03-13 19:39:46 - AscendCCrawler - INFO - 使用 GitHub Crawler
+2026-03-13 19:39:46 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: github)
+2026-03-13 19:39:58 - AscendCCrawler - INFO - 使用 Gitee 平台,默认分支: master
+2026-03-13 19:39:58 - AscendCCrawler - INFO - 使用 Gitee OAuth 令牌
+2026-03-13 19:39:58 - AscendCCrawler - INFO - 使用 Gitee Crawler
+2026-03-13 19:39:58 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: gitee)
+2026-03-13 19:40:01 - AscendCCrawler - INFO - 使用 GitHub Access Token
+2026-03-13 19:40:01 - AscendCCrawler - INFO - 使用 GitHub Crawler
+2026-03-13 19:40:01 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: github)
+2026-03-13 19:40:01 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库...
+2026-03-13 19:40:01 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC']
+2026-03-13 19:40:01 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-13 19:40:06 - AscendCCrawler - INFO - 关键词 'AscendC' 找到 100 个符合条件的仓库
+2026-03-13 19:40:06 - AscendCCrawler - INFO - 搜索完成,共找到 1 个仓库
+2026-03-13 19:40:16 - AscendCCrawler - INFO - 使用 GitHub Access Token
+2026-03-13 19:40:16 - AscendCCrawler - INFO - 使用 GitHub Crawler
+2026-03-13 19:40:16 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: github)
+2026-03-13 19:40:16 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库...
+2026-03-13 19:40:16 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC']
+2026-03-13 19:40:16 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-13 19:40:21 - AscendCCrawler - INFO - 关键词 'AscendC' 找到 100 个符合条件的仓库
+2026-03-13 19:40:21 - AscendCCrawler - INFO - 搜索完成,共找到 10 个仓库
+2026-03-13 19:40:21 - AscendCCrawler - ERROR - 程序异常: 'NoneType' object is not subscriptable
+Traceback (most recent call last):
+  File "/Users/mac/Study/Research/crawlDemo/main_crawler.py", line 310, in <module>
+    main()
+  File "/Users/mac/Study/Research/crawlDemo/main_crawler.py", line 270, in main
+    description = repo.get('description', 'N/A')[:50]
+TypeError: 'NoneType' object is not subscriptable
+2026-03-13 19:40:58 - AscendCCrawler - INFO - 使用 GitHub Access Token
+2026-03-13 19:40:58 - AscendCCrawler - INFO - 使用 GitHub Crawler
+2026-03-13 19:40:58 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: github)
+2026-03-13 19:40:58 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库...
+2026-03-13 19:40:58 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC']
+2026-03-13 19:40:58 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-13 19:41:02 - AscendCCrawler - INFO - 关键词 'AscendC' 找到 100 个符合条件的仓库
+2026-03-13 19:41:02 - AscendCCrawler - INFO - 搜索完成,共找到 3 个仓库
+2026-03-13 19:41:11 - AscendCCrawler - INFO - 使用 GitHub Access Token
+2026-03-13 19:41:11 - AscendCCrawler - INFO - 使用 GitHub Crawler
+2026-03-13 19:41:11 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: github)
+2026-03-13 19:41:11 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库...
+2026-03-13 19:41:11 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC']
+2026-03-13 19:41:11 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-13 19:41:15 - AscendCCrawler - INFO - 关键词 'AscendC' 找到 100 个符合条件的仓库
+2026-03-13 19:41:15 - AscendCCrawler - INFO - 搜索完成,共找到 10 个仓库
+2026-03-13 19:42:45 - AscendCCrawler - INFO - 使用 GitHub Access Token
+2026-03-13 19:42:45 - AscendCCrawler - INFO - 使用 GitHub Crawler
+2026-03-13 19:42:45 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: github)
+2026-03-13 19:42:45 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库...
+2026-03-13 19:42:45 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC']
+2026-03-13 19:42:45 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-13 19:42:50 - AscendCCrawler - INFO - 关键词 'AscendC' 找到 100 个符合条件的仓库
+2026-03-13 19:42:50 - AscendCCrawler - INFO - 搜索完成,共找到 5 个仓库
+2026-03-13 19:42:55 - AscendCCrawler - INFO - 开始批量爬取 5 个仓库
+2026-03-13 19:42:55 - AscendCCrawler - INFO - [1/5] 处理仓库: w568w/AscendC-clangd-demo
+2026-03-13 19:42:55 - AscendCCrawler - INFO - 开始爬取仓库: w568w/AscendC-clangd-demo
+2026-03-13 19:42:57 - AscendCCrawler - WARNING - ⚠️  仓库 w568w/AscendC-clangd-demo 未获取到文件
+2026-03-13 19:42:57 - AscendCCrawler - INFO - [2/5] 处理仓库: wanghemeng/AscendCL_GEMM
+2026-03-13 19:42:57 - AscendCCrawler - INFO - 开始爬取仓库: wanghemeng/AscendCL_GEMM
+2026-03-13 19:43:07 - AscendCCrawler - INFO - ✅ 成功爬取 wanghemeng/AscendCL_GEMM,获取 10 个文件
+2026-03-13 19:43:07 - AscendCCrawler - INFO - [3/5] 处理仓库: ASCENDynamics-NFP/AscendCoopPlatform
+2026-03-13 19:43:07 - AscendCCrawler - INFO - 开始爬取仓库: ASCENDynamics-NFP/AscendCoopPlatform
+2026-03-13 19:43:08 - AscendCCrawler - WARNING - ⚠️  仓库 ASCENDynamics-NFP/AscendCoopPlatform 未获取到文件
+2026-03-13 19:43:08 - AscendCCrawler - INFO - [4/5] 处理仓库: lrisguan/ascend-matvec-benchmark
+2026-03-13 19:43:08 - AscendCCrawler - INFO - 开始爬取仓库: lrisguan/ascend-matvec-benchmark
+2026-03-13 19:43:08 - AscendCCrawler - WARNING - ⚠️  仓库 lrisguan/ascend-matvec-benchmark 未获取到文件
+2026-03-13 19:43:08 - AscendCCrawler - INFO - [5/5] 处理仓库: motobiubiu/biubiuquik
+2026-03-13 19:43:08 - AscendCCrawler - INFO - 开始爬取仓库: motobiubiu/biubiuquik
+2026-03-13 19:43:09 - AscendCCrawler - WARNING - ⚠️  仓库 motobiubiu/biubiuquik 未获取到文件
+2026-03-13 19:43:09 - AscendCCrawler - ERROR - 程序异常: Object of type datetime is not JSON serializable
+Traceback (most recent call last):
+  File "/Users/mac/Study/Research/crawlDemo/main_crawler.py", line 311, in <module>
+    main()
+  File "/Users/mac/Study/Research/crawlDemo/main_crawler.py", line 289, in main
+    results = crawler.crawl_multiple_repos(
+  File "/Users/mac/Study/Research/crawlDemo/crawl_ascendC.py", line 342, in crawl_multiple_repos
+    self._save_progress(all_results, repos)
+  File "/Users/mac/Study/Research/crawlDemo/crawl_ascendC.py", line 374, in _save_progress
+    json.dump(progress_data, f, ensure_ascii=False, indent=2)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/json/__init__.py", line 179, in dump
+    for chunk in iterable:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/json/encoder.py", line 431, in _iterencode
+    yield from _iterencode_dict(o, _current_indent_level)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/json/encoder.py", line 405, in _iterencode_dict
+    yield from chunks
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/json/encoder.py", line 405, in _iterencode_dict
+    yield from chunks
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/json/encoder.py", line 438, in _iterencode
+    o = _default(o)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type datetime is not JSON serializable
+2026-03-13 19:47:27 - AscendCCrawler - INFO - 使用 Gitee 平台,默认分支: master
+2026-03-13 19:47:27 - AscendCCrawler - INFO - 使用 Gitee OAuth 令牌
+2026-03-13 19:47:27 - AscendCCrawler - INFO - 使用 Gitee Crawler
+2026-03-13 19:47:27 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: gitee)
+2026-03-13 19:47:28 - AscendCCrawler - INFO - 使用 Gitee 平台,默认分支: master
+2026-03-13 19:47:28 - AscendCCrawler - INFO - 使用 Gitee OAuth 令牌
+2026-03-13 19:47:28 - AscendCCrawler - INFO - 使用 Gitee Crawler
+2026-03-13 19:47:28 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: gitee)
+2026-03-13 19:47:28 - AscendCCrawler - INFO - 进度已保存: test_results/crawl_progress_20260313_194728.json
+2026-03-13 19:48:27 - AscendCCrawler - INFO - 使用 Gitee 平台,默认分支: master
+2026-03-13 19:48:27 - AscendCCrawler - INFO - 使用 Gitee OAuth 令牌
+2026-03-13 19:48:27 - AscendCCrawler - INFO - 使用 Gitee Crawler
+2026-03-13 19:48:27 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: gitee)
+2026-03-13 19:48:28 - AscendCCrawler - INFO - 使用 Gitee 平台,默认分支: master
+2026-03-13 19:48:28 - AscendCCrawler - INFO - 使用 Gitee OAuth 令牌
+2026-03-13 19:48:28 - AscendCCrawler - INFO - 使用 Gitee Crawler
+2026-03-13 19:48:28 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: gitee)
+2026-03-13 19:48:28 - AscendCCrawler - INFO - 进度已保存: test_results/crawl_progress_20260313_194828.json
+2026-03-13 19:48:43 - AscendCCrawler - INFO - 使用 Gitee 平台,默认分支: master
+2026-03-13 19:48:43 - AscendCCrawler - INFO - 使用 Gitee OAuth 令牌
+2026-03-13 19:48:43 - AscendCCrawler - INFO - 使用 Gitee Crawler
+2026-03-13 19:48:43 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: gitee)
+2026-03-13 19:48:44 - AscendCCrawler - INFO - 使用 Gitee 平台,默认分支: master
+2026-03-13 19:48:44 - AscendCCrawler - INFO - 使用 Gitee OAuth 令牌
+2026-03-13 19:48:44 - AscendCCrawler - INFO - 使用 Gitee Crawler
+2026-03-13 19:48:44 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: gitee)
+2026-03-13 19:48:44 - AscendCCrawler - INFO - 进度已保存: test_results/crawl_progress_20260313_194844.json
+2026-03-13 19:49:05 - AscendCCrawler - INFO - 使用 Gitee OAuth 令牌
+2026-03-13 19:49:05 - AscendCCrawler - INFO - 使用 Gitee Crawler
+2026-03-13 19:49:05 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: gitee)
+2026-03-13 19:49:05 - AscendCCrawler - INFO - 开始批量爬取 3 个仓库
+2026-03-13 19:49:05 - AscendCCrawler - INFO - [1/3] 处理仓库: harrygt/ascendc-tutorial
+2026-03-13 19:49:05 - AscendCCrawler - INFO - 开始爬取仓库: harrygt/ascendc-tutorial
+2026-03-13 19:49:05 - AscendCCrawler - INFO - 仓库默认分支: master
+2026-03-13 19:49:10 - AscendCCrawler - INFO - ✅ 成功爬取 harrygt/ascendc-tutorial,获取 10 个文件
+2026-03-13 19:49:10 - AscendCCrawler - INFO - [2/3] 处理仓库: ASCENDynamics-NFP/AscendCoopPlatform
+2026-03-13 19:49:10 - AscendCCrawler - INFO - 开始爬取仓库: ASCENDynamics-NFP/AscendCoopPlatform
+2026-03-13 19:49:10 - AscendCCrawler - WARNING - ⚠️  无法获取仓库信息: ASCENDynamics-NFP/AscendCoopPlatform
+2026-03-13 19:49:10 - AscendCCrawler - INFO - [3/3] 处理仓库: lrisguan/ascend-matvec-benchmark
+2026-03-13 19:49:10 - AscendCCrawler - INFO - 开始爬取仓库: lrisguan/ascend-matvec-benchmark
+2026-03-13 19:49:10 - AscendCCrawler - WARNING - ⚠️  无法获取仓库信息: lrisguan/ascend-matvec-benchmark
+2026-03-13 19:49:10 - AscendCCrawler - INFO - 进度已保存: test_output/results/crawl_progress_20260313_194910.json
+2026-03-13 19:49:10 - AscendCCrawler - INFO - 批量爬取完成,共处理 3 个仓库
+2026-03-13 19:49:10 - AscendCCrawler - INFO - 报告已生成: test_output/results/crawl_report_20260313_194910.json
+2026-03-13 19:50:06 - AscendCCrawler - INFO - 使用 GitHub Access Token
+2026-03-13 19:50:06 - AscendCCrawler - INFO - 使用 GitHub Crawler
+2026-03-13 19:50:06 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: github)
+2026-03-13 19:50:06 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库...
+2026-03-13 19:50:06 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC']
+2026-03-13 19:50:06 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-13 19:50:10 - AscendCCrawler - INFO - 关键词 'AscendC' 找到 100 个符合条件的仓库
+2026-03-13 19:50:10 - AscendCCrawler - INFO - 搜索完成,共找到 5 个仓库
+2026-03-13 19:50:12 - AscendCCrawler - INFO - 开始批量爬取 5 个仓库
+2026-03-13 19:50:12 - AscendCCrawler - INFO - [1/5] 处理仓库: w568w/AscendC-clangd-demo
+2026-03-13 19:50:12 - AscendCCrawler - INFO - 开始爬取仓库: w568w/AscendC-clangd-demo
+2026-03-13 19:50:12 - AscendCCrawler - INFO - 仓库默认分支: main
+2026-03-13 19:50:13 - AscendCCrawler - INFO - 配置的分支 master 未找到文件，尝试默认分支 main
+2026-03-13 19:50:17 - AscendCCrawler - INFO - ✅ 成功爬取 w568w/AscendC-clangd-demo,获取 6 个文件
+2026-03-13 19:50:17 - AscendCCrawler - INFO - [2/5] 处理仓库: wanghemeng/AscendCL_GEMM
+2026-03-13 19:50:17 - AscendCCrawler - INFO - 开始爬取仓库: wanghemeng/AscendCL_GEMM
+2026-03-13 19:50:18 - AscendCCrawler - INFO - 仓库默认分支: master
+2026-03-13 19:50:28 - AscendCCrawler - INFO - ✅ 成功爬取 wanghemeng/AscendCL_GEMM,获取 10 个文件
+2026-03-13 19:50:28 - AscendCCrawler - INFO - [3/5] 处理仓库: ASCENDynamics-NFP/AscendCoopPlatform
+2026-03-13 19:50:28 - AscendCCrawler - INFO - 开始爬取仓库: ASCENDynamics-NFP/AscendCoopPlatform
+2026-03-13 19:50:28 - AscendCCrawler - INFO - 仓库默认分支: main
+2026-03-13 19:50:29 - AscendCCrawler - INFO - 配置的分支 master 未找到文件，尝试默认分支 main
+2026-03-13 19:50:37 - AscendCCrawler - INFO - ✅ 成功爬取 ASCENDynamics-NFP/AscendCoopPlatform,获取 10 个文件
+2026-03-13 19:50:37 - AscendCCrawler - INFO - [4/5] 处理仓库: lrisguan/ascend-matvec-benchmark
+2026-03-13 19:50:37 - AscendCCrawler - INFO - 开始爬取仓库: lrisguan/ascend-matvec-benchmark
+2026-03-13 19:50:37 - AscendCCrawler - INFO - 仓库默认分支: main
+2026-03-13 19:50:38 - AscendCCrawler - INFO - 配置的分支 master 未找到文件，尝试默认分支 main
+2026-03-13 19:50:46 - AscendCCrawler - INFO - ✅ 成功爬取 lrisguan/ascend-matvec-benchmark,获取 10 个文件
+2026-03-13 19:50:46 - AscendCCrawler - INFO - [5/5] 处理仓库: motobiubiu/biubiuquik
+2026-03-13 19:50:46 - AscendCCrawler - INFO - 开始爬取仓库: motobiubiu/biubiuquik
+2026-03-13 19:50:47 - AscendCCrawler - INFO - 仓库默认分支: main
+2026-03-13 19:50:47 - AscendCCrawler - INFO - 配置的分支 master 未找到文件，尝试默认分支 main
+2026-03-13 19:50:56 - AscendCCrawler - INFO - ✅ 成功爬取 motobiubiu/biubiuquik,获取 10 个文件
+2026-03-13 19:50:56 - AscendCCrawler - INFO - 进度已保存: output/results/crawl_progress_20260313_195056.json
+2026-03-13 19:50:56 - AscendCCrawler - INFO - 进度已保存: output/results/crawl_progress_20260313_195056.json
+2026-03-13 19:50:56 - AscendCCrawler - INFO - 批量爬取完成,共处理 5 个仓库
+2026-03-13 19:50:56 - AscendCCrawler - ERROR - 程序异常: name 'datetime' is not defined
+Traceback (most recent call last):
+  File "/Users/mac/Study/Research/crawlDemo/main_crawler.py", line 311, in <module>
+    main()
+  File "/Users/mac/Study/Research/crawlDemo/main_crawler.py", line 296, in main
+    crawler.stats['end_time'] = datetime.now()
+NameError: name 'datetime' is not defined
+2026-03-13 19:52:30 - AscendCCrawler - INFO - 使用 Gitee 平台,默认分支: master
+2026-03-13 19:52:30 - AscendCCrawler - INFO - 使用 Gitee OAuth 令牌
+2026-03-13 19:52:30 - AscendCCrawler - INFO - 使用 Gitee Crawler
+2026-03-13 19:52:30 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: gitee)
+2026-03-13 19:52:30 - AscendCCrawler - INFO - 进度已保存: test_output/results/crawl_progress_20260313_195230.json
+2026-03-13 19:52:30 - AscendCCrawler - INFO - 报告已生成: test_output/results/crawl_report_20260313_195230.json
+2026-03-13 19:52:48 - AscendCCrawler - INFO - 使用 GitHub Access Token
+2026-03-13 19:52:48 - AscendCCrawler - INFO - 使用 GitHub Crawler
+2026-03-13 19:52:48 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: github)
+2026-03-13 19:52:48 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库...
+2026-03-13 19:52:48 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC']
+2026-03-13 19:52:48 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-13 19:52:51 - AscendCCrawler - INFO - 关键词 'AscendC' 找到 100 个符合条件的仓库
+2026-03-13 19:52:51 - AscendCCrawler - INFO - 搜索完成,共找到 1 个仓库
+2026-03-13 19:52:53 - AscendCCrawler - INFO - 开始批量爬取 1 个仓库
+2026-03-13 19:52:53 - AscendCCrawler - INFO - [1/1] 处理仓库: w568w/AscendC-clangd-demo
+2026-03-13 19:52:53 - AscendCCrawler - INFO - 开始爬取仓库: w568w/AscendC-clangd-demo
+2026-03-13 19:52:54 - AscendCCrawler - INFO - 仓库默认分支: main
+2026-03-13 19:52:54 - AscendCCrawler - INFO - 配置的分支 master 未找到文件，尝试默认分支 main
+2026-03-13 19:52:55 - AscendCCrawler - INFO - ✅ 成功爬取 w568w/AscendC-clangd-demo,获取 1 个文件
+2026-03-13 19:52:55 - AscendCCrawler - INFO - 进度已保存: output/results/crawl_progress_20260313_195255.json
+2026-03-13 19:52:55 - AscendCCrawler - INFO - 批量爬取完成,共处理 1 个仓库
+2026-03-13 19:52:55 - AscendCCrawler - INFO - 报告已生成: output/results/crawl_report_20260313_195255.json
+2026-03-13 19:52:55 - AscendCCrawler - ERROR - 程序异常: unsupported operand type(s) for -: 'datetime.datetime' and 'str'
+Traceback (most recent call last):
+  File "/Users/mac/Study/Research/crawlDemo/main_crawler.py", line 312, in <module>
+    main()
+  File "/Users/mac/Study/Research/crawlDemo/main_crawler.py", line 305, in main
+    print_summary(crawler, repos, results)
+  File "/Users/mac/Study/Research/crawlDemo/main_crawler.py", line 210, in print_summary
+    duration = (stats['end_time'] - stats['start_time']).total_seconds()
+TypeError: unsupported operand type(s) for -: 'datetime.datetime' and 'str'
+2026-03-13 19:53:33 - AscendCCrawler - INFO - 使用 GitHub Access Token
+2026-03-13 19:53:33 - AscendCCrawler - INFO - 使用 GitHub Crawler
+2026-03-13 19:53:33 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: github)
+2026-03-13 19:53:33 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库...
+2026-03-13 19:53:33 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC']
+2026-03-13 19:53:33 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-13 19:53:38 - AscendCCrawler - INFO - 关键词 'AscendC' 找到 0 个符合条件的仓库
+2026-03-13 19:53:38 - AscendCCrawler - INFO - 搜索完成,共找到 0 个仓库
+2026-03-13 19:53:50 - AscendCCrawler - INFO - 使用 Gitee OAuth 令牌
+2026-03-13 19:53:50 - AscendCCrawler - INFO - 使用 Gitee Crawler
+2026-03-13 19:53:50 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: gitee)
+2026-03-13 19:53:50 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库...
+2026-03-13 19:53:50 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC', 'CANN', '算子开发', 'Ascend', '昇腾']
+2026-03-13 19:53:50 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-13 19:54:00 - AscendCCrawler - INFO - 关键词 'AscendC' 找到 0 个符合条件的仓库
+2026-03-13 19:54:00 - AscendCCrawler - INFO - 搜索关键词: CANN
+2026-03-13 19:54:10 - AscendCCrawler - INFO - 关键词 'CANN' 找到 0 个符合条件的仓库
+2026-03-13 19:54:10 - AscendCCrawler - INFO - 搜索关键词: 算子开发
+2026-03-13 19:54:21 - AscendCCrawler - INFO - 关键词 '算子开发' 找到 0 个符合条件的仓库
+2026-03-13 19:54:21 - AscendCCrawler - INFO - 搜索关键词: Ascend
+2026-03-13 19:54:31 - AscendCCrawler - INFO - 关键词 'Ascend' 找到 0 个符合条件的仓库
+2026-03-13 19:54:31 - AscendCCrawler - INFO - 搜索关键词: 昇腾
+2026-03-13 19:54:41 - AscendCCrawler - INFO - 关键词 '昇腾' 找到 0 个符合条件的仓库
+2026-03-13 19:54:41 - AscendCCrawler - INFO - 搜索完成,共找到 0 个仓库
+2026-03-13 19:55:13 - AscendCCrawler - INFO - 使用 Gitee 平台,默认分支: master
+2026-03-13 19:55:13 - AscendCCrawler - INFO - 使用 Gitee OAuth 令牌
+2026-03-13 19:55:13 - AscendCCrawler - INFO - 使用 Gitee Crawler
+2026-03-13 19:55:13 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: gitee)
+2026-03-13 19:55:13 - AscendCCrawler - INFO - 开始批量爬取 1 个仓库
+2026-03-13 19:55:13 - AscendCCrawler - INFO - [1/1] 处理仓库: harrygt/ascendc-tutorial
+2026-03-13 19:55:13 - AscendCCrawler - INFO - 开始爬取仓库: harrygt/ascendc-tutorial
+2026-03-13 19:55:13 - AscendCCrawler - INFO - 仓库默认分支: master
+2026-03-13 19:55:17 - AscendCCrawler - INFO - ✅ 成功爬取 harrygt/ascendc-tutorial,获取 5 个文件
+2026-03-13 19:55:17 - AscendCCrawler - INFO - 进度已保存: test_output/results/crawl_progress_20260313_195517.json
+2026-03-13 19:55:17 - AscendCCrawler - INFO - 批量爬取完成,共处理 1 个仓库
+2026-03-13 19:55:17 - AscendCCrawler - INFO - 报告已生成: test_output/results/crawl_report_20260313_195517.json
+2026-03-13 19:55:43 - AscendCCrawler - INFO - 使用 GitHub Access Token
+2026-03-13 19:55:43 - AscendCCrawler - INFO - 使用 GitHub Crawler
+2026-03-13 19:55:43 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: github)
+2026-03-13 19:55:43 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库...
+2026-03-13 19:55:43 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC']
+2026-03-13 19:55:43 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-13 19:55:48 - AscendCCrawler - INFO - 关键词 'AscendC' 找到 0 个符合条件的仓库
+2026-03-13 19:55:48 - AscendCCrawler - INFO - 搜索完成,共找到 0 个仓库
+2026-03-13 19:55:56 - AscendCCrawler - INFO - 使用 GitHub Access Token
+2026-03-13 19:55:56 - AscendCCrawler - INFO - 使用 GitHub Crawler
+2026-03-13 19:55:56 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: github)
+2026-03-13 19:55:56 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库...
+2026-03-13 19:55:56 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC']
+2026-03-13 19:55:56 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-13 19:55:59 - AscendCCrawler - INFO - 关键词 'AscendC' 找到 100 个符合条件的仓库
+2026-03-13 19:55:59 - AscendCCrawler - INFO - 搜索完成,共找到 5 个仓库
+2026-03-13 19:56:01 - AscendCCrawler - INFO - 开始批量爬取 5 个仓库
+2026-03-13 19:56:01 - AscendCCrawler - INFO - [1/5] 处理仓库: w568w/AscendC-clangd-demo
+2026-03-13 19:56:01 - AscendCCrawler - INFO - 开始爬取仓库: w568w/AscendC-clangd-demo
+2026-03-13 19:56:02 - AscendCCrawler - INFO - 仓库默认分支: main
+2026-03-13 19:56:02 - AscendCCrawler - INFO - 配置的分支 master 未找到文件，尝试默认分支 main
+2026-03-13 19:56:03 - AscendCCrawler - INFO - ✅ 成功爬取 w568w/AscendC-clangd-demo,获取 1 个文件
+2026-03-13 19:56:03 - AscendCCrawler - INFO - [2/5] 处理仓库: wanghemeng/AscendCL_GEMM
+2026-03-13 19:56:03 - AscendCCrawler - INFO - 开始爬取仓库: wanghemeng/AscendCL_GEMM
+2026-03-13 19:56:04 - AscendCCrawler - INFO - 仓库默认分支: master
+2026-03-13 19:56:05 - AscendCCrawler - INFO - ✅ 成功爬取 wanghemeng/AscendCL_GEMM,获取 1 个文件
+2026-03-13 19:56:05 - AscendCCrawler - INFO - [3/5] 处理仓库: ASCENDynamics-NFP/AscendCoopPlatform
+2026-03-13 19:56:05 - AscendCCrawler - INFO - 开始爬取仓库: ASCENDynamics-NFP/AscendCoopPlatform
+2026-03-13 19:56:06 - AscendCCrawler - INFO - 仓库默认分支: main
+2026-03-13 19:56:06 - AscendCCrawler - INFO - 配置的分支 master 未找到文件，尝试默认分支 main
+2026-03-13 19:56:08 - AscendCCrawler - INFO - ✅ 成功爬取 ASCENDynamics-NFP/AscendCoopPlatform,获取 1 个文件
+2026-03-13 19:56:08 - AscendCCrawler - INFO - [4/5] 处理仓库: lrisguan/ascend-matvec-benchmark
+2026-03-13 19:56:08 - AscendCCrawler - INFO - 开始爬取仓库: lrisguan/ascend-matvec-benchmark
+2026-03-13 19:56:09 - AscendCCrawler - INFO - 仓库默认分支: main
+2026-03-13 19:56:10 - AscendCCrawler - INFO - 配置的分支 master 未找到文件，尝试默认分支 main
+2026-03-13 19:56:20 - AscendCCrawler - WARNING - ⚠️  仓库 lrisguan/ascend-matvec-benchmark 未获取到文件
+2026-03-13 19:56:20 - AscendCCrawler - INFO - [5/5] 处理仓库: motobiubiu/biubiuquik
+2026-03-13 19:56:20 - AscendCCrawler - INFO - 开始爬取仓库: motobiubiu/biubiuquik
+2026-03-13 19:56:21 - AscendCCrawler - INFO - 仓库默认分支: main
+2026-03-13 19:56:22 - AscendCCrawler - INFO - 配置的分支 master 未找到文件，尝试默认分支 main
+2026-03-13 19:56:22 - AscendCCrawler - INFO - ✅ 成功爬取 motobiubiu/biubiuquik,获取 1 个文件
+2026-03-13 19:56:22 - AscendCCrawler - INFO - 进度已保存: output/results/crawl_progress_20260313_195622.json
+2026-03-13 19:56:22 - AscendCCrawler - INFO - 进度已保存: output/results/crawl_progress_20260313_195622.json
+2026-03-13 19:56:22 - AscendCCrawler - INFO - 批量爬取完成,共处理 5 个仓库
+2026-03-13 19:56:22 - AscendCCrawler - INFO - 报告已生成: output/results/crawl_report_20260313_195622.json
+2026-03-13 19:57:45 - AscendCCrawler - INFO - 使用 GitHub Access Token
+2026-03-13 19:57:45 - AscendCCrawler - INFO - 使用 GitHub Crawler
+2026-03-13 19:57:45 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: github)
+2026-03-13 19:57:45 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库...
+2026-03-13 19:57:45 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC']
+2026-03-13 19:57:45 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-13 19:57:49 - AscendCCrawler - INFO - 关键词 'AscendC' 找到 100 个符合条件的仓库
+2026-03-13 19:57:49 - AscendCCrawler - INFO - 搜索完成,共找到 5 个仓库
+2026-03-13 19:57:51 - AscendCCrawler - INFO - 开始批量爬取 5 个仓库
+2026-03-13 19:57:51 - AscendCCrawler - INFO - [1/5] 处理仓库: w568w/AscendC-clangd-demo
+2026-03-13 19:57:51 - AscendCCrawler - INFO - 开始爬取仓库: w568w/AscendC-clangd-demo
+2026-03-13 19:57:52 - AscendCCrawler - INFO - 仓库默认分支: main
+2026-03-13 19:57:52 - AscendCCrawler - INFO - 配置的分支 master 未找到文件，尝试默认分支 main
+2026-03-13 19:57:53 - AscendCCrawler - INFO - ✅ 成功爬取 w568w/AscendC-clangd-demo,获取 1 个文件
+2026-03-13 19:57:53 - AscendCCrawler - INFO - [2/5] 处理仓库: wanghemeng/AscendCL_GEMM
+2026-03-13 19:57:53 - AscendCCrawler - INFO - 开始爬取仓库: wanghemeng/AscendCL_GEMM
+2026-03-13 19:57:54 - AscendCCrawler - INFO - 仓库默认分支: master
+2026-03-13 19:57:55 - AscendCCrawler - INFO - ✅ 成功爬取 wanghemeng/AscendCL_GEMM,获取 1 个文件
+2026-03-13 19:57:55 - AscendCCrawler - INFO - [3/5] 处理仓库: ASCENDynamics-NFP/AscendCoopPlatform
+2026-03-13 19:57:55 - AscendCCrawler - INFO - 开始爬取仓库: ASCENDynamics-NFP/AscendCoopPlatform
+2026-03-13 19:57:56 - AscendCCrawler - INFO - 仓库默认分支: main
+2026-03-13 19:57:56 - AscendCCrawler - INFO - 配置的分支 master 未找到文件，尝试默认分支 main
+2026-03-13 19:57:57 - AscendCCrawler - INFO - ✅ 成功爬取 ASCENDynamics-NFP/AscendCoopPlatform,获取 1 个文件
+2026-03-13 19:57:57 - AscendCCrawler - INFO - [4/5] 处理仓库: lrisguan/ascend-matvec-benchmark
+2026-03-13 19:57:57 - AscendCCrawler - INFO - 开始爬取仓库: lrisguan/ascend-matvec-benchmark
+2026-03-13 19:57:58 - AscendCCrawler - INFO - 仓库默认分支: main
+2026-03-13 19:57:58 - AscendCCrawler - INFO - 配置的分支 master 未找到文件，尝试默认分支 main
+2026-03-13 19:57:59 - AscendCCrawler - INFO - ✅ 成功爬取 lrisguan/ascend-matvec-benchmark,获取 1 个文件
+2026-03-13 19:57:59 - AscendCCrawler - INFO - [5/5] 处理仓库: motobiubiu/biubiuquik
+2026-03-13 19:57:59 - AscendCCrawler - INFO - 开始爬取仓库: motobiubiu/biubiuquik
+2026-03-13 19:57:59 - AscendCCrawler - INFO - 仓库默认分支: main
+2026-03-13 19:58:00 - AscendCCrawler - INFO - 配置的分支 master 未找到文件，尝试默认分支 main
+2026-03-13 19:58:01 - AscendCCrawler - INFO - ✅ 成功爬取 motobiubiu/biubiuquik,获取 1 个文件
+2026-03-13 19:58:01 - AscendCCrawler - INFO - 进度已保存: output/results/crawl_progress_20260313_195801.json
+2026-03-13 19:58:01 - AscendCCrawler - INFO - 进度已保存: output/results/crawl_progress_20260313_195801.json
+2026-03-13 19:58:01 - AscendCCrawler - INFO - 批量爬取完成,共处理 5 个仓库
+2026-03-13 19:58:01 - AscendCCrawler - INFO - 报告已生成: output/results/crawl_report_20260313_195801.json
+2026-03-13 19:58:56 - AscendCCrawler - INFO - 使用 Gitee OAuth 令牌
+2026-03-13 19:58:56 - AscendCCrawler - INFO - 使用 Gitee Crawler
+2026-03-13 19:58:56 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: gitee)
+2026-03-13 19:58:56 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库...
+2026-03-13 19:58:56 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC']
+2026-03-13 19:58:56 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-13 19:59:06 - AscendCCrawler - INFO - 关键词 'AscendC' 找到 0 个符合条件的仓库
+2026-03-13 19:59:06 - AscendCCrawler - INFO - 搜索完成,共找到 0 个仓库

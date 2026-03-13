@@ -1,17 +1,6 @@
-# Gitee API 爬虫示例
+# Gitee/GitHub API 爬虫示例
 
-这是一个使用 Gitee API v5 爬取仓库信息的 Python 示例程序，支持 OAuth2 授权和代码文件爬取。
-
-## 功能特性
-
-### AscendC 爬虫功能
-- 🔍 **多关键词搜索**：自动搜索 AscendC、CANN、算子开发等相关仓库
-- 📊 **智能筛选**：按 stars、forks、更新时间过滤
-- 📥 **批量下载**：批量爬取多个仓库的代码文件
-- 💾 **进度保存**：定期保存进度，支持中断恢复
-- 📈 **统计分析**：生成详细的爬取报告和统计数据
-- 🎯 **文件过滤**：按扩展名过滤文件类型
-- 📝 **完善日志**：所有操作都有详细日志记录
+这是一个支持 Gitee 和 GitHub 的 Python 代码爬虫程序，支持 OAuth2 授权和代码文件爬取。
 
 ### 基础功能
 -  获取仓库基本信息（名称、描述、stars、forks等）
@@ -39,6 +28,8 @@ pip install -r requirements.txt
 ### 2. 配置认证 (推荐但可选)
 
 创建 `.env` 文件：
+
+**Gitee 平台配置：**
 ```bash
 # 方式1: 使用 Access Token (推荐)
 GITEE_ACCESS_TOKEN=your_access_token_here
@@ -46,16 +37,37 @@ GITEE_ACCESS_TOKEN=your_access_token_here
 # 方式2: 使用 OAuth2 (最高限额)
 GITEE_CLIENT_ID=your_client_id
 GITEE_CLIENT_SECRET=your_client_secret
+
+# 选择平台 (可选，默认 gitee)
+CRAWL_PLATFORM=gitee
 ```
 
-获取 Access Token: https://gitee.com/profile/personal_access_tokens
+**GitHub 平台配置：**
+```bash
+# 方式1: 使用 Personal Access Token (推荐)
+GITHUB_ACCESS_TOKEN=ghp_your_access_token_here
 
-### 3. 使用 AscendC 爬虫 (生产级)
+# 方式2: 使用 OAuth2
+GITHUB_CLIENT_ID=your_client_id
+GITHUB_CLIENT_SECRET=your_client_secret
+
+# 选择平台
+CRAWL_PLATFORM=github
+```
+
+获取 Access Token：
+- Gitee: https://gitee.com/profile/personal_access_tokens
+- GitHub: https://github.com/settings/tokens
+
+### 3. 使用 AscendC 爬虫 
 
 #### 基本使用
 ```bash
-# 使用默认配置爬取
+# 使用默认配置爬取 (Gitee平台)
 python main_crawler.py
+
+# 使用 GitHub 平台
+python main_crawler.py --platform github
 
 # 指定搜索关键词
 python main_crawler.py --keywords "AscendC,CANN"
@@ -70,13 +82,19 @@ python main_crawler.py --search-only
 python main_crawler.py --help
 ```
 
+#### 平台选择
+```bash
+# 使用 Gitee (默认)
+python main_crawler.py --platform gitee
+
+# 使用 GitHub
+python main_crawler.py --platform github -p github
+```
+
 #### 使用配置文件
 ```bash
 # 复制示例配置
 cp config_example.json my_config.json
-
-# 编辑配置文件
-vim my_config.json
 
 # 使用配置文件运行
 python main_crawler.py --config my_config.json
@@ -102,10 +120,9 @@ python main_crawler.py
 
 ### 4.作为模块导入使用
 
+#### 使用 Gitee 平台
 ```python
-from gitee_api import GiteeAPI
-from gitee_crawler import GiteeCrawler
-from gitee_oauth import GiteeOAuth
+from adapters.gitee import GiteeAPI, GiteeCrawler, GiteeOAuth
 
 # 使用 API 客户端
 api = GiteeAPI(access_token="your_token")
@@ -119,6 +136,36 @@ files = crawler.crawl_repo_files("owner", "repo", max_files=50)
 oauth = GiteeOAuth(client_id="...", client_secret="...")
 oauth.authorize_interactive()
 api = GiteeAPI(oauth=oauth)
+```
+
+#### 使用 GitHub 平台
+```python
+from adapters.github import GitHubAPI, GitHubCrawler, GitHubOAuth
+
+# 使用 API 客户端
+api = GitHubAPI(access_token="ghp_your_token")
+repo_info = api.get_repo("owner", "repo")
+
+# 使用爬虫
+crawler = GitHubCrawler(api)
+files = crawler.crawl_repo_files("owner", "repo", max_files=50)
+
+# 使用 OAuth
+oauth = GitHubOAuth(client_id="...", client_secret="...")
+oauth.authorize_interactive()
+api = GitHubAPI(oauth=oauth)
+```
+
+#### 统一接口（推荐）
+```python
+from core import BaseAPI, BaseCrawler
+
+# 使用时根据平台选择具体的实现类
+platform = "github"  # 或 "gitee"
+if platform == "github":
+    from adapters.github import GitHubAPI, GitHubCrawler
+else:
+    from adapters.gitee import GiteeAPI, GiteeCrawler
 ```
 
 ## 🔧 配置说明
@@ -139,9 +186,15 @@ api = GiteeAPI(oauth=oauth)
 
 ### API 速率限制
 
+**Gitee 平台：**
 - **无认证**: 约 60 次/小时
 - **Access Token**: 约 500 次/小时
 - **OAuth2**: 约 5000 次/小时 (推荐)
+
+**GitHub 平台：**
+- **无认证**: 约 60 次/小时
+- **Personal Access Token**: 约 5000 次/小时 (推荐)
+- **OAuth2**: 约 5000 次/小时
 
 ## 📂 目录结构
 
@@ -151,11 +204,27 @@ crawlDemo/
 ├── crawl_ascendC.py         # AscendC 爬虫模块
 ├── config.py                # 配置管理模块
 ├── config_example.json      # 示例配置文件
-├── gitee_api.py             # Gitee API 客户端
-├── gitee_crawler.py         # 通用爬虫模块
-├── gitee_oauth.py           # OAuth2 授权模块
 ├── utils.py                 # 工具函数
 ├── requirements.txt         # 依赖列表
+│
+├── core/                    # 核心抽象层 (新增)
+│   ├── __init__.py
+│   ├── base_api.py         # API 基类
+│   └── base_crawler.py     # 爬虫基类
+│
+├── adapters/                # 平台适配器 (新增)
+│   ├── __init__.py
+│   ├── gitee/              # Gitee 适配器
+│   │   ├── __init__.py
+│   │   ├── api.py          # GiteeAPI 实现
+│   │   ├── crawler.py      # GiteeCrawler 实现
+│   │   └── oauth.py        # Gitee OAuth 实现
+│   └── github/             # GitHub 适配器 (新增)
+│       ├── __init__.py
+│       ├── api.py          # GitHubAPI 实现
+│       ├── crawler.py      # GitHubCrawler 实现
+│       └── oauth.py        # GitHub OAuth 实现
+│
 ├── output/                  # 输出目录
 │   ├── ascendc/            # 爬取的代码
 │   └── results/            # 爬取结果 JSON
@@ -163,41 +232,6 @@ crawlDemo/
     └── ascendc_crawler.log
 ```
 
-## 🛠️ 高级功能
-
-### 扩展性设计
-
-代码采用模块化设计，便于扩展到其他平台：
-
-1. **统一接口 + 多适配器模式**
-   - 定义统一的爬虫接口 `BaseCrawler`
-   - 为每个平台实现适配器 (Gitee, GitHub, Blog)
-   - 添加新平台只需实现接口，无需修改现有代码
-
-2. **配置驱动**
-   - 支持配置文件、命令行参数、环境变量
-   - 平台配置集中管理 (未来支持)
-
-3. **可扩展架构**
-   ```
-   core/               # 核心抽象层
-   ├── base_crawler.py # 爬虫基类
-   └── models.py       # 数据模型
-
-   adapters/           # 平台适配器
-   ├── gitee/          # Gitee 适配器 ✅
-   ├── github/         # GitHub 适配器 (规划中)
-   └── blog/           # Blog 适配器 (规划中)
-   ```
-
-### 未来规划
-
-- [ ] GitHub 代码爬取支持
-- [ ] 技术文档站点爬取 (Blog适配器)
-- [ ] 个人博客 RSS 订阅支持
-- [ ] 多线程并发爬取
-- [ ] 更智能的代码去重
-- [ ] Web UI 界面
 
 ## 🐛 故障排查
 
@@ -205,20 +239,34 @@ crawlDemo/
 
 **Q: 提示认证失败或速率限制**
 ```bash
-# 解决方法: 配置 Access Token 或 OAuth2
+# Gitee 解决方法: 配置 Access Token 或 OAuth2
 export GITEE_ACCESS_TOKEN=your_token
+
+# GitHub 解决方法: 配置 Personal Access Token
+export GITHUB_ACCESS_TOKEN=ghp_your_token
 ```
 
 **Q: 找不到相关仓库**
 ```bash
 # 解决方法: 调整搜索关键词和过滤条件
 python main_crawler.py --keywords "AscendC" --min-stars 0
+
+# 尝试切换平台
+python main_crawler.py --platform github
 ```
 
 **Q: 下载速度慢**
 ```bash
 # 解决方法: 减少爬取数量
 python main_crawler.py --max-repos 3 --max-files 50
+```
+
+**Q: 搜索 API 返回空结果**
+```bash
+# Gitee search api 存在问题，解决方法：
+# 1. 通过其他方式获取仓库名称
+# 2. 直接通过仓库名称来获取仓库代码
+# 3. 或尝试切换到 GitHub 平台
 ```
 
 ## License

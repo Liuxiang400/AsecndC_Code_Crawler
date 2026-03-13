@@ -1,1 +1,5 @@
+# HTTP 请求库
 requests>=2.31.0
+
+# 环境变量管理
+python-dotenv>=1.0.0

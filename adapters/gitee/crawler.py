@@ -6,10 +6,11 @@ Gitee 爬虫模块
 
 import os
 from typing import Dict, List, Optional
-from gitee_api import GiteeAPI
+from core.base_crawler import BaseCrawler
+from adapters.gitee.api import GiteeAPI
 
 
-class GiteeCrawler:
+class GiteeCrawler(BaseCrawler):
     """Gitee 仓库爬虫"""
 
     def __init__(self, api: GiteeAPI):
@@ -19,7 +20,7 @@ class GiteeCrawler:
         Args:
             api: GiteeAPI 实例
         """
-        self.api = api
+        super().__init__(api)
 
     def crawl_repo_files(
         self,

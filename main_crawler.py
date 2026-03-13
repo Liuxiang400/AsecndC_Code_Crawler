@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AscendC 代码爬虫 - 生产级入口程序
+AscendC 代码爬虫入口程序
 支持命令行参数、配置文件、断点续传等功能
 """
 
@@ -9,14 +9,25 @@ import argparse
 import json
 from pathlib import Path
 from typing import Optional
+from datetime import datetime
 from crawl_ascendC import AscendCCrawler, setup_logger, logger
 
 
 def parse_args():
     """解析命令行参数"""
     parser = argparse.ArgumentParser(
-        description='AscendC 代码爬虫 - 从 Gitee 爬取 AscendC 相关代码',
+        description='AscendC 代码爬虫 - 从 Gitee/GitHub 爬取 AscendC 相关代码',
         formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+
+    # 平台选择
+    parser.add_argument(
+        '--platform',
+        '-p',
+        type=str,
+        choices=['gitee', 'github'],
+        default='gitee',
+        help='选择平台 (gitee/github, 默认: gitee)'
     )
 
     # 搜索选项
@@ -155,6 +166,7 @@ def load_resume_file(resume_file: str) -> tuple:
 def build_config_from_args(args) -> dict:
     """从命令行参数构建配置"""
     config = {
+        'platform': args.platform,  # 添加平台配置
         'max_repos': args.max_repos,
         'max_files_per_repo': args.max_files,
         'min_stars': args.min_stars,
@@ -173,11 +185,12 @@ def build_config_from_args(args) -> dict:
     return config
 
 
-def print_banner():
+def print_banner(platform: str = 'gitee'):
     """打印程序横幅"""
+    platform_name = platform.upper()
     print("\n" + "=" * 70)
     print(" " * 15 + "AscendC 代码爬虫 v1.0")
-    print(" " * 10 + "从 Gitee 爬取 AscendC 相关代码仓库")
+    print(" " * 10 + f"从 {platform_name} 爬取 AscendC 相关代码仓库")
     print("=" * 70)
 
 
@@ -194,8 +207,24 @@ def print_summary(crawler: AscendCCrawler, repos: list, results: dict):
     print(f"   爬取仓库数: {stats['repos_crawled']}")
     print(f"   获取文件数: {stats['files_crawled']}")
 
-    duration = (stats['end_time'] - stats['start_time']).total_seconds()
-    print(f"   执行时长: {duration:.2f} 秒")
+    # 计算执行时长（处理字符串格式的 datetime）
+    try:
+        start_time = stats.get('start_time')
+        end_time = stats.get('end_time')
+
+        if start_time and end_time:
+            # 如果是字符串格式，转换为 datetime 对象
+            if isinstance(start_time, str):
+                start_time = datetime.fromisoformat(start_time)
+            if isinstance(end_time, str):
+                end_time = datetime.fromisoformat(end_time)
+
+            duration = (end_time - start_time).total_seconds()
+            print(f"   执行时长: {duration:.2f} 秒")
+        else:
+            print("   执行时长: N/A")
+    except Exception as e:
+        print(f"   执行时长: 计算失败 ({e})")
 
     if stats['errors']:
         print(f"\n⚠️  错误数量: {len(stats['errors'])}")
@@ -211,7 +240,7 @@ def print_summary(crawler: AscendCCrawler, repos: list, results: dict):
 def main():
     """主函数"""
     args = parse_args()
-    print_banner()
+    print_banner(args.platform)
 
     # 设置日志级别
     if args.verbose:
@@ -255,7 +284,8 @@ def main():
         for i, repo in enumerate(repos[:10], 1):
             stars = repo.get('stargazers_count', 0)
             full_name = repo.get('full_name', '')
-            description = repo.get('description', 'N/A')[:50]
+            description = repo.get('description') or 'N/A'
+            description = str(description)[:50] if description else 'N/A'
             print(f"   {i:2d}. {full_name} ⭐ {stars}")
             print(f"       {description}...")
 
@@ -280,7 +310,7 @@ def main():
     )
 
     # 记录结束时间
-    crawler.stats['end_time'] = crawler.stats['start_time'].__class__.now()
+    crawler.stats['end_time'] = datetime.now()
 
     # 生成报告
     print("\n📊 生成爬取报告...")

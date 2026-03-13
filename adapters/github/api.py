@@ -1,25 +1,26 @@
 #!/usr/bin/env python3
 """
-Gitee API 客户端核心模块
+GitHub API 客户端模块
 提供基础的 API 请求和仓库信息获取功能
 """
 
 import requests
 from typing import Dict, List, Optional
-from gitee_oauth import GiteeOAuth
+from core.base_api import BaseAPI
+from adapters.github.oauth import GitHubOAuth
 
 
-class GiteeAPI:
-    """Gitee API 客户端"""
+class GitHubAPI(BaseAPI):
+    """GitHub API 客户端"""
 
-    BASE_URL = "https://gitee.com/api/v5"
+    BASE_URL = "https://api.github.com"
 
-    def __init__(self, access_token: Optional[str] = None, oauth: Optional[GiteeOAuth] = None):
+    def __init__(self, access_token: Optional[str] = None, oauth: Optional[GitHubOAuth] = None):
         """
-        初始化 Gitee API 客户端
+        初始化 GitHub API 客户端
 
         Args:
-            access_token: 可选的访问令牌，用于提高API调用限制
+            access_token: 可选的访问令牌（Personal Access Token）
             oauth: 可选的 OAuth 对象，支持自动刷新令牌
         """
         self.access_token = access_token
@@ -27,8 +28,9 @@ class GiteeAPI:
         self.session = requests.Session()
         self.session.headers.update(
             {
-                "User-Agent": "Gitee-API-Demo/1.0",
+                "User-Agent": "GitHub-API-Demo/1.0",
                 "Content-Type": "application/json",
+                "Accept": "application/vnd.github.v3+json",
             }
         )
 
@@ -48,6 +50,8 @@ class GiteeAPI:
         if params is None:
             params = {}
 
+        # 准备请求头
+        headers = {}
         # 优先使用 OAuth 令牌，支持自动刷新
         token = None
         if self.oauth:
@@ -60,22 +64,29 @@ class GiteeAPI:
         elif self.access_token:
             token = self.access_token
 
-        # 如果有token，添加到参数中
+        # GitHub 使用 Bearer token
         if token:
-            params["access_token"] = token
+            headers["Authorization"] = f"Bearer {token}"
 
         try:
             # 搜索接口可能需要更长的超时时间
             timeout = 30 if 'search' in endpoint else 10
-            response = self.session.get(url, params=params, timeout=timeout)
+            response = self.session.get(url, params=params, headers=headers, timeout=timeout)
 
             # 检查速率限制
             if response.status_code == 403:
-                print("❌ API 速率限制已超出!")
+                remaining = response.headers.get('X-RateLimit-Remaining', '0')
+                reset_time = response.headers.get('X-RateLimit-Reset', '')
+                print("❌ GitHub API 速率限制已超出!")
+                print(f"   剩余请求次数: {remaining}")
+                if reset_time:
+                    import datetime
+                    reset_time_str = datetime.datetime.fromtimestamp(int(reset_time)).strftime('%Y-%m-%d %H:%M:%S')
+                    print(f"   重置时间: {reset_time_str}")
                 print("   建议:")
                 print("   1. 等待一段时间后重试（通常1小时后重置）")
-                print("   2. 使用 Access Token 提高限制")
-                print("   3. 检查 https://gitee.com/profile/personal_access_tokens")
+                print("   2. 使用 Personal Access Token 提高限制")
+                print("   3. 检查 https://github.com/settings/tokens")
                 return {}
 
             response.raise_for_status()
@@ -89,7 +100,7 @@ class GiteeAPI:
                 print("   建议: 检查搜索关键词是否包含特殊字符")
             elif e.response.status_code == 401:
                 print("❌ 认证失败: Access Token 无效或已过期")
-                print("   建议: 更新 .env 文件中的 GITEE_ACCESS_TOKEN")
+                print("   建议: 更新 .env 文件中的 GITHUB_ACCESS_TOKEN")
             elif e.response.status_code == 404:
                 print(f"❌ 资源未找到: {endpoint}")
             else:
@@ -98,7 +109,7 @@ class GiteeAPI:
         except requests.exceptions.Timeout as e:
             print(f"❌ 请求超时: {e}")
             print(f"   URL: {url}")
-            print("   建议: Gitee API 搜索接口响应较慢，请稍后重试")
+            print("   建议: GitHub API 响应较慢，请稍后重试")
             return {}
         except requests.exceptions.RequestException as e:
             print(f"❌ 请求失败: {e}")
@@ -151,7 +162,7 @@ class GiteeAPI:
         return self._get(endpoint, params={"state": state, "per_page": 50})
 
     def get_repo_contents(
-        self, owner: str, repo: str, path: str = "", branch: str = "master"
+        self, owner: str, repo: str, path: str = "", branch: str = "main"
     ) -> List[Dict]:
         """
         获取仓库目录内容（文件和文件夹列表）
@@ -160,7 +171,7 @@ class GiteeAPI:
             owner: 仓库所有者
             repo: 仓库名称
             path: 目录路径，空字符串表示根目录
-            branch: 分支名，默认master
+            branch: 分支名，默认main（GitHub默认分支）
 
         Returns:
             文件/目录列表
@@ -173,7 +184,7 @@ class GiteeAPI:
         return self._get(endpoint, params={"ref": branch})
 
     def get_file_content(
-        self, owner: str, repo: str, path: str, branch: str = "master"
+        self, owner: str, repo: str, path: str, branch: str = "main"
     ) -> Optional[Dict]:
         """
         获取单个文件的内容（解码base64）
@@ -182,7 +193,7 @@ class GiteeAPI:
             owner: 仓库所有者
             repo: 仓库名称
             path: 文件路径
-            branch: 分支名，默认master
+            branch: 分支名，默认main
 
         Returns:
             包含文件信息的字典（含解码后的content字段）
@@ -197,7 +208,7 @@ class GiteeAPI:
         # 解码base64内容
         if "content" in result:
             try:
-                # Gitee API 返回的是 base64 编码的内容
+                # GitHub API 返回的是 base64 编码的内容
                 encoded_content = result["content"]
                 # 移除可能的换行符
                 encoded_content = encoded_content.replace("\n", "")
@@ -274,10 +285,10 @@ class GiteeAPI:
         if language:
             search_query = f"{query} language:{language}"
 
-        # Gitee API 不支持 sort 和 order 参数
-        # 如果需要排序，会在获取结果后手动排序
         params = {
             "q": search_query,
+            "sort": sort,
+            "order": order,
             "per_page": per_page
         }
 
@@ -285,16 +296,9 @@ class GiteeAPI:
 
         try:
             result = self._get(endpoint, params)
-            # 确保返回列表
-            if isinstance(result, dict):
-                # 如果返回的是字典，可能包含错误信息
-                if 'message' in result or 'error' in result:
-                    print(f"API 返回错误: {result}")
-                    return []
-                # 有些情况可能返回 {'items': [...]}
-                if 'items' in result:
-                    return result['items']
-                return []
+            # GitHub 搜索 API 返回 {"items": [...]}
+            if isinstance(result, dict) and 'items' in result:
+                return result['items']
             return result if result else []
         except Exception as e:
             print(f"搜索请求异常: {e}")
