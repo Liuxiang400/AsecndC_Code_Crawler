@@ -65,11 +65,43 @@ class GiteeAPI:
             params["access_token"] = token
 
         try:
-            response = self.session.get(url, params=params, timeout=10)
+            # 搜索接口可能需要更长的超时时间
+            timeout = 30 if 'search' in endpoint else 10
+            response = self.session.get(url, params=params, timeout=timeout)
+
+            # 检查速率限制
+            if response.status_code == 403:
+                print("❌ API 速率限制已超出!")
+                print("   建议:")
+                print("   1. 等待一段时间后重试（通常1小时后重置）")
+                print("   2. 使用 Access Token 提高限制")
+                print("   3. 检查 https://gitee.com/profile/personal_access_tokens")
+                return {}
+
             response.raise_for_status()
             return response.json()
+
+        except requests.exceptions.HTTPError as e:
+            if e.response.status_code == 400:
+                print(f"❌ 请求参数错误: {e}")
+                print(f"   URL: {url}")
+                print(f"   参数: {params}")
+                print("   建议: 检查搜索关键词是否包含特殊字符")
+            elif e.response.status_code == 401:
+                print("❌ 认证失败: Access Token 无效或已过期")
+                print("   建议: 更新 .env 文件中的 GITEE_ACCESS_TOKEN")
+            elif e.response.status_code == 404:
+                print(f"❌ 资源未找到: {endpoint}")
+            else:
+                print(f"❌ HTTP 错误: {e}")
+            return {}
+        except requests.exceptions.Timeout as e:
+            print(f"❌ 请求超时: {e}")
+            print(f"   URL: {url}")
+            print("   建议: Gitee API 搜索接口响应较慢，请稍后重试")
+            return {}
         except requests.exceptions.RequestException as e:
-            print(f"请求失败: {e}")
+            print(f"❌ 请求失败: {e}")
             return {}
 
     def get_repo(self, owner: str, repo: str) -> Dict:
@@ -227,25 +259,46 @@ class GiteeAPI:
             language: 编程语言过滤
             sort: 排序方式 (stars, forks, updated)
             order: 排序顺序 (desc, asc)
-            per_page: 每页结果数量
+            per_page: 每页结果数量 (最大100)
 
         Returns:
             仓库列表
         """
         print(f"\n=== 搜索仓库: {query} ===")
 
+        # 限制 per_page 在合理范围内
+        per_page = min(per_page, 100)
+
+        # 构建搜索查询
+        search_query = query
+        if language:
+            search_query = f"{query} language:{language}"
+
+        # Gitee API 不支持 sort 和 order 参数
+        # 如果需要排序，会在获取结果后手动排序
         params = {
-            "q": query,
-            "sort": sort,
-            "order": order,
+            "q": search_query,
             "per_page": per_page
         }
 
-        if language:
-            params["q"] = f"{params['q']} language:{language}"
-
         endpoint = "/search/repositories"
-        return self._get(endpoint, params)
+
+        try:
+            result = self._get(endpoint, params)
+            # 确保返回列表
+            if isinstance(result, dict):
+                # 如果返回的是字典，可能包含错误信息
+                if 'message' in result or 'error' in result:
+                    print(f"API 返回错误: {result}")
+                    return []
+                # 有些情况可能返回 {'items': [...]}
+                if 'items' in result:
+                    return result['items']
+                return []
+            return result if result else []
+        except Exception as e:
+            print(f"搜索请求异常: {e}")
+            return []
 
     def get_user_info(self) -> Optional[Dict]:
         """

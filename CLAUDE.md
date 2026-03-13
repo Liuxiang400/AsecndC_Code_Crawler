@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Instruction
+
+1. 在编写代码之前，请描述你的方案并等待批准，如果需求不明确，在编写代码之前务必进行澄清。
+
 ## Project Overview
 
 This is a **Gitee API crawler** - a Python application that interacts with the Gitee API v5 to fetch repository information. Gitee is a Git-based code hosting platform popular in China. The project demonstrates API client patterns and web scraping techniques for educational purposes.

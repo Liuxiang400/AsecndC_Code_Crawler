@@ -1,217 +1,374 @@
-#!/usr/bin/env python3xs
+#!/usr/bin/env python3
+"""
+AscendC 专用爬虫模块
+提供增强的搜索、批量爬取、进度跟踪等功能
+"""
+
 import os
-import dotenv
+import json
+import logging
+from datetime import datetime, timedelta
+from typing import Dict, List, Optional, Tuple
+from dotenv import load_dotenv
 from gitee_api import GiteeAPI
-from gitee_oauth import GiteeOAuth
 from gitee_crawler import GiteeCrawler
-from utils import print_json, print_repo_summary, print_readme_preview, print_file_structure, print_issues_summary
+from gitee_oauth import GiteeOAuth
 
 
-def demo_crawl_gitee_repo(repo_owner:str, repo_name:str):
-    dotenv.load_dotenv()
-    # 或者通过环境变量设置: export GITEE_ACCESS_TOKEN="your_token"
-    access_token = os.getenv("GITEE_ACCESS_TOKEN")
-
-    # 初始化API客户端
-    api = GiteeAPI(access_token=access_token)
-
-    owner = repo_owner
-    repo = repo_name
-
-    print(f"\n开始爬取 Gitee 仓库: {owner}/{repo}")
-    print("=" * 60)
-
-    # 1. 获取仓库基本信息
-    repo_info = api.get_repo(owner, repo)
-    if repo_info:
-        print_json(repo_info, "仓库基本信息")
-        print_repo_summary(repo_info)
-
-    # 2. 获取并展示 README 内容（解码后）
-    readme = api.get_repo_readme_decoded(owner, repo)
-    if readme and "text" in readme:
-        print_readme_preview(readme)
-
-    # 3. 获取仓库的文件/目录结构
-    contents = api.get_repo_contents(owner, repo, path="")
-    print_file_structure(contents)
-
-def demo_crawl_code_files(repo_owner:str, repo_name:str):
-    dotenv.load_dotenv()
-    access_token = os.getenv("GITEE_ACCESS_TOKEN")
-
-    # 初始化API客户端
-    api = GiteeAPI(access_token=access_token)
-    crawler = GiteeCrawler(api)
-
-    # 目标仓库
-    owner = repo_owner
-    repo = repo_name
-
-    print(f"\n开始爬取仓库代码文件: {owner}/{repo}")
-    print("=" * 60)
-
-    # 爬取并且下载相关文件
-    print("\n\n爬取并保存到本地目录")
-    saved_files = crawler.save_repo_files(
-        owner=owner,
-        repo=repo,
-        output_dir=f"output/{repo}",
-        branch="master",
-        max_files=100,
-        file_extensions=[".py", ".md", ".txt",".cpp",".h","hpp","c"],
+# 配置日志
+def setup_logger(name: str, log_file: str, level=logging.INFO) -> logging.Logger:
+    """配置日志记录器"""
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
     )
 
-    if saved_files:
-        print(f"\n✅ 成功保存 {len(saved_files)} 个文件")
-        print("文件映射（远程路径 -> 本地路径）:")
-        for remote_path, local_path in list(saved_files.items())[:5]:
-            print(f"  {remote_path} -> {local_path}")
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
 
-    print("\n" + "=" * 60)
-    print("✅ 代码文件爬取完成!")
+    # 文件处理器
+    file_handler = logging.FileHandler(log_file, encoding='utf-8')
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
 
+    # 控制台处理器
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(formatter)
+    logger.addHandler(console_handler)
 
-def demo_search_repositories():
-    api = GiteeAPI()
-
-    print("\n=== 搜索仓库示例 ===")
-
-    # 搜索热门的Python仓库
-    results = api.search_repositories(
-        query="python",
-        language="python",
-        sort="stars",
-        order="desc",
-        per_page=10
-    )
-
-    if isinstance(results, list) and results:
-        print(f"\n找到 {len(results)} 个仓库:")
-        for i, repo in enumerate(results, 1):
-            print(f"\n{i}. {repo.get('full_name')}")
-            print(f"   描述: {repo.get('description', 'N/A')[:60]}...")
-            print(f"   Stars: {repo.get('stargazers_count', 0)}")
-            print(f"   URL: {repo.get('html_url')}")
+    return logger
 
 
-def demo_oauth_authorization():
-    """演示：OAuth2 授权流程"""
-    print("\n" + "=" * 60)
-    print("Gitee OAuth2 授权演示")
-    print("=" * 60)
+# 创建日志目录
+os.makedirs('logs', exist_ok=True)
+logger = setup_logger('AscendCCrawler', 'logs/ascendc_crawler.log')
 
-    # 配置你的 OAuth 应用信息
-    # 需要在 https://gitee.com/settings/applications 创建应用
-    # 可以通过环境变量设置:
-    # export GITEE_CLIENT_ID="your_client_id"
-    # export GITEE_CLIENT_SECRET="your_client_secret"
 
-    client_id = os.getenv("GITEE_CLIENT_ID")
-    if not client_id:
-        client_id = input("请输入你的 Client ID: ").strip()
-    if not client_id:
-        print("❌ Client ID 不能为空")
-        return
+class AscendCCrawler:
+    """AscendC 专用爬虫类"""
 
-    client_secret = os.getenv("GITEE_CLIENT_SECRET")
-    if not client_secret:
-        client_secret = input("请输入你的 Client Secret: ").strip()
-    if not client_secret:
-        print("❌ Client Secret 不能为空")
-        return
+    # AscendC 相关搜索关键词
+    SEARCH_KEYWORDS = ['AscendC', 'CANN', '算子开发', 'Ascend', '昇腾']
 
-    # 创建 OAuth 客户端
-    oauth = GiteeOAuth(
-        client_id=client_id,
-        client_secret=client_secret,
-        scopes=["user_info", "projects", "pull_requests", "issues", "notes"],
-    )
+    # 支持的文件扩展名
+    FILE_EXTENSIONS = ['.py', '.md', '.txt', '.cpp', '.c', '.h', '.hpp',
+                       '.json', '.yaml', '.yml', '.ascendc']
 
-    # 尝试从文件加载已保存的令牌
-    if oauth.load_from_file():
-        if oauth.is_token_expired():
-            print("⚠️  已保存的令牌已过期，尝试刷新...")
-            if not oauth.refresh_access_token():
-                print("⚠️  刷新失败，需要重新授权")
-            else:
-                print("✅ 令牌刷新成功")
-        else:
-            print("✅ 已加载有效的访问令牌")
-    else:
-        # 使用交互式授权
-        print("\n选择授权方式:")
-        print("1. 浏览器授权（推荐）")
-        print("2. 密码授权（需要应用支持）")
+    # 默认配置
+    DEFAULT_CONFIG = {
+        'max_repos': 10,
+        'max_files_per_repo': 100,
+        'min_stars': 0,
+        'min_forks': 0,
+        'days_since_update': 365,
+        'output_dir': 'output/ascendc',
+        'results_dir': 'output/results',
+        'file_extensions': FILE_EXTENSIONS,
+        'branch': 'master'
+    }
 
-        choice = input("\n请选择 (1/2): ").strip()
+    def __init__(self, config: Optional[Dict] = None):
+        """
+        初始化爬虫
 
-        if choice == "1":
-            if not oauth.authorize_interactive():
-                print("❌ 授权失败")
-                return
-        elif choice == "2":
-            username = input("请输入 Gitee 用户名: ").strip()
-            password = input("请输入 Gitee 密码: ").strip()
+        Args:
+            config: 配置字典,覆盖默认配置
+        """
+        load_dotenv()
 
-            if not oauth.get_token_with_password(username, password):
-                print("❌ 授权失败")
-                return
-        else:
-            print("❌ 无效的选择")
-            return
+        # 合并配置
+        self.config = self.DEFAULT_CONFIG.copy()
+        if config:
+            self.config.update(config)
 
-    # 保存令牌到文件
-    oauth.save_to_file()
+        # 初始化 API 客户端
+        self.api = self._init_api()
+        self.crawler = GiteeCrawler(self.api)
 
-    # 使用 OAuth 令牌创建 API 客户端
-    api = GiteeAPI(oauth=oauth)
+        # 统计信息
+        self.stats = {
+            'repos_searched': 0,
+            'repos_crawled': 0,
+            'files_crawled': 0,
+            'errors': [],
+            'start_time': datetime.now()
+        }
 
-    print("\n" + "=" * 60)
-    print("🧪 测试 API 调用")
-    print("=" * 60)
+        logger.info("AscendC 爬虫初始化完成")
 
-    # 测试获取用户信息
-    print("\n📊 获取当前用户信息...")
-    user_info = api.get_user_info()
-    if user_info:
-        print(f"✅ 用户: {user_info.get('login')}")
-        print(f"   姓名: {user_info.get('name')}")
-        print(f"   Email: {user_info.get('email')}")
-        print(f"   关注: {user_info.get('following_count')}")
-        print(f"   粉丝: {user_info.get('followers_count')}")
+    def _init_api(self) -> GiteeAPI:
+        """初始化 Gitee API 客户端"""
+        # 优先使用 OAuth
+        client_id = os.getenv('GITEE_CLIENT_ID')
+        client_secret = os.getenv('GITEE_CLIENT_SECRET')
 
-    # 测试获取用户的仓库
-    print("\n📦 获取用户的仓库...")
-    repos = api.get_user_repos(per_page=5)
-    if isinstance(repos, list) and repos:
-        print(f"✅ 找到 {len(repos)} 个仓库:")
-        for repo in repos:
-            print(f"   - {repo.get('full_name')} ({repo.get('private') and '私有' or '公开'})")
+        if client_id and client_secret:
+            oauth = GiteeOAuth(
+                client_id=client_id,
+                client_secret=client_secret,
+                scopes=['user_info', 'projects', 'pull_requests', 'issues', 'notes']
+            )
+            if oauth.load_from_file():
+                logger.info("使用 OAuth 令牌")
+                return GiteeAPI(oauth=oauth)
 
-    # 测试爬取代码文件
-    print("\n📥 测试爬取代码文件...")
-    crawler = GiteeCrawler(api)
+        # 使用 Access Token
+        access_token = os.getenv('GITEE_ACCESS_TOKEN')
+        if access_token:
+            logger.info("使用 Access Token")
+            return GiteeAPI(access_token=access_token)
 
-    owner = input("\n请输入要爬取的仓库所有者 (留空跳过): ").strip()
-    if owner:
-        repo = input("请输入仓库名称: ").strip()
-        if repo:
-            files = crawler.crawl_repo_files(
-                owner=owner,
-                repo=repo,
-                max_files=10,
-                file_extensions=[".py", ".md"],
+        # 无认证
+        logger.warning("未配置认证,使用匿名访问(速率限制较低)")
+        return GiteeAPI()
+
+    def search_ascendc_repos(
+        self,
+        keywords: Optional[List[str]] = None,
+        language: Optional[str] = None,
+        sort: str = 'stars',
+        order: str = 'desc',
+        max_pages: int = 5
+    ) -> List[Dict]:
+    
+        keywords = keywords or self.SEARCH_KEYWORDS
+        all_repos = []
+
+        logger.info(f"开始搜索 AscendC 相关仓库,关键词: {keywords}")
+
+        for keyword in keywords:
+            logger.info(f"搜索关键词: {keyword}")
+
+            # 搜索仓库
+            results = self.api.search_repositories(
+                query=keyword,
+                language=language,
+                sort=sort,
+                order=order,
+                per_page=100
             )
 
-            if files:
-                print(f"\n✅ 成功爬取 {len(files)} 个文件")
-                for file_path in list(files.keys())[:3]:
-                    print(f"   - {file_path}")
+            if isinstance(results, list):
+                # 过滤符合条件的仓库
+                filtered = self._filter_repos(results)
+                all_repos.extend(filtered)
+                logger.info(f"关键词 '{keyword}' 找到 {len(filtered)} 个符合条件的仓库")
 
-    print("\n" + "=" * 60)
-    print("✅ OAuth 授权演示完成!")
-    print("\n💡 提示:")
-    print("   - 令牌已保存到 .gitee_token.json")
-    print("   - 下次运行时会自动加载令牌")
-    print("   - 令牌过期时会自动刷新")
+        # 去重(基于 full_name)
+        unique_repos = {}
+        for repo in all_repos:
+            full_name = repo.get('full_name')
+            if full_name and full_name not in unique_repos:
+                unique_repos[full_name] = repo
+
+        # 按排序字段重新排序
+        sorted_repos = sorted(
+            unique_repos.values(),
+            key=lambda x: x.get(sort, 0),
+            reverse=(order == 'desc')
+        )
+
+        # 限制数量
+        final_repos = sorted_repos[:self.config['max_repos']]
+
+        self.stats['repos_searched'] = len(final_repos)
+        logger.info(f"搜索完成,共找到 {len(final_repos)} 个仓库")
+
+        return final_repos
+
+    def _filter_repos(self, repos: List[Dict]) -> List[Dict]:
+        """
+        过滤仓库列表
+
+        Args:
+            repos: 仓库列表
+
+        Returns:
+            过滤后的仓库列表
+        """
+        filtered = []
+        min_stars = self.config['min_stars']
+        min_forks = self.config['min_forks']
+        days_threshold = timedelta(days=self.config['days_since_update'])
+        cutoff_date = datetime.now() - days_threshold
+
+        for repo in repos:
+            # 检查 stars
+            if repo.get('stargazers_count', 0) < min_stars:
+                continue
+
+            # 检查 forks
+            if repo.get('forks_count', 0) < min_forks:
+                continue
+
+            # 检查更新时间
+            updated_str = repo.get('updated_at', '')
+            if updated_str:
+                try:
+                    updated_date = datetime.fromisoformat(updated_str.replace('Z', '+00:00'))
+                    if updated_date < cutoff_date:
+                        continue
+                except:
+                    pass
+
+            filtered.append(repo)
+
+        return filtered
+
+    def crawl_single_repo(
+        self,
+        owner: str,
+        repo: str,
+        output_dir: Optional[str] = None
+    ) -> Optional[Dict[str, str]]:
+    
+        output_dir = output_dir or self.config['output_dir']
+
+        logger.info(f"开始爬取仓库: {owner}/{repo}")
+
+        try:
+            saved_files = self.crawler.save_repo_files(
+                owner=owner,
+                repo=repo,
+                output_dir=output_dir,
+                branch=self.config['branch'],
+                max_files=self.config['max_files_per_repo'],
+                file_extensions=self.config['file_extensions']
+            )
+
+            if saved_files:
+                self.stats['repos_crawled'] += 1
+                self.stats['files_crawled'] += len(saved_files)
+                logger.info(f"✅ 成功爬取 {owner}/{repo},获取 {len(saved_files)} 个文件")
+            else:
+                logger.warning(f"⚠️  仓库 {owner}/{repo} 未获取到文件")
+
+            return saved_files
+
+        except Exception as e:
+            error_msg = f"爬取 {owner}/{repo} 失败: {str(e)}"
+            logger.error(error_msg)
+            self.stats['errors'].append(error_msg)
+            return None
+
+    def crawl_multiple_repos(
+        self,
+        repos: List[Dict],
+        output_dir: Optional[str] = None,
+        save_progress: bool = True
+    ) -> Dict[str, Dict[str, str]]:
+
+        output_dir = output_dir or self.config['output_dir']
+        all_results = {}
+
+        logger.info(f"开始批量爬取 {len(repos)} 个仓库")
+
+        for i, repo in enumerate(repos, 1):
+            full_name = repo.get('full_name', '')
+            logger.info(f"[{i}/{len(repos)}] 处理仓库: {full_name}")
+
+            # 解析 owner 和 repo
+            parts = full_name.split('/')
+            if len(parts) != 2:
+                logger.warning(f"无效的仓库名: {full_name}")
+                continue
+
+            owner, repo_name = parts
+
+            # 爬取仓库
+            saved_files = self.crawl_single_repo(owner, repo_name, output_dir)
+
+            if saved_files:
+                all_results[full_name] = saved_files
+
+            # 定期保存进度
+            if save_progress and i % 5 == 0:
+                self._save_progress(all_results, repos)
+
+        # 最终保存进度
+        if save_progress:
+            self._save_progress(all_results, repos)
+
+        logger.info(f"批量爬取完成,共处理 {len(repos)} 个仓库")
+        return all_results
+
+    def _save_progress(self, results: Dict, repos: List[Dict]):
+        """保存爬取进度"""
+        progress_data = {
+            'timestamp': datetime.now().isoformat(),
+            'stats': self.stats,
+            'repos_info': repos,
+            'results_summary': {
+                repo_name: len(files)
+                for repo_name, files in results.items()
+            }
+        }
+
+        # 创建结果目录
+        os.makedirs(self.config['results_dir'], exist_ok=True)
+
+        # 保存进度文件
+        timestamp_str = datetime.now().strftime('%Y%m%d_%H%M%S')
+        progress_file = os.path.join(
+            self.config['results_dir'],
+            f'crawl_progress_{timestamp_str}.json'
+        )
+
+        with open(progress_file, 'w', encoding='utf-8') as f:
+            json.dump(progress_data, f, ensure_ascii=False, indent=2)
+
+        logger.info(f"进度已保存: {progress_file}")
+
+    def generate_report(self, results: Dict[str, Dict[str, str]]) -> str:
+    
+        report_data = {
+            'crawl_time': datetime.now().isoformat(),
+            'configuration': self.config,
+            'statistics': {
+                'total_repos_searched': self.stats['repos_searched'],
+                'total_repos_crawled': self.stats['repos_crawled'],
+                'total_files_crawled': self.stats['files_crawled'],
+                'duration_seconds': (
+                    datetime.now() - self.stats['start_time']
+                ).total_seconds(),
+                'errors': self.stats['errors']
+            },
+            'repositories': []
+        }
+
+        # 添加每个仓库的详细信息
+        for repo_name, files in results.items():
+            repo_report = {
+                'name': repo_name,
+                'files_count': len(files),
+                'file_types': self._analyze_file_types(files),
+                'total_size': sum(
+                    os.path.getsize(path)
+                    for path in files.values()
+                    if os.path.exists(path)
+                )
+            }
+            report_data['repositories'].append(repo_report)
+
+        # 保存报告
+        os.makedirs(self.config['results_dir'], exist_ok=True)
+        timestamp_str = datetime.now().strftime('%Y%m%d_%H%M%S')
+        report_file = os.path.join(
+            self.config['results_dir'],
+            f'crawl_report_{timestamp_str}.json'
+        )
+
+        with open(report_file, 'w', encoding='utf-8') as f:
+            json.dump(report_data, f, ensure_ascii=False, indent=2)
+
+        logger.info(f"报告已生成: {report_file}")
+        return report_file
+
+    def _analyze_file_types(self, files: Dict[str, str]) -> Dict[str, int]:
+        """分析文件类型分布"""
+        type_counts = {}
+        for file_path in files.values():
+            ext = os.path.splitext(file_path)[1].lower()
+            type_counts[ext] = type_counts.get(ext, 0) + 1
+        return type_counts
+

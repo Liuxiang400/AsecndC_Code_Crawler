@@ -1,0 +1,50 @@
+2026-03-13 17:21:05 - AscendCCrawler - INFO - 使用 OAuth 令牌
+2026-03-13 17:21:05 - AscendCCrawler - INFO - AscendC 爬虫初始化完成
+2026-03-13 17:21:05 - AscendCCrawler - INFO - 使用 OAuth 令牌
+2026-03-13 17:21:05 - AscendCCrawler - INFO - AscendC 爬虫初始化完成
+2026-03-13 17:21:05 - AscendCCrawler - INFO - 使用 OAuth 令牌
+2026-03-13 17:21:05 - AscendCCrawler - INFO - AscendC 爬虫初始化完成
+2026-03-13 17:21:05 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC']
+2026-03-13 17:21:05 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-13 17:21:06 - AscendCCrawler - INFO - 搜索完成,共找到 0 个仓库
+2026-03-13 17:28:20 - AscendCCrawler - INFO - 使用 OAuth 令牌
+2026-03-13 17:28:20 - AscendCCrawler - INFO - AscendC 爬虫初始化完成
+2026-03-13 17:28:20 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库...
+2026-03-13 17:28:20 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC', 'CANN', '算子开发', 'Ascend', '昇腾']
+2026-03-13 17:28:20 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-13 17:28:21 - AscendCCrawler - INFO - 搜索关键词: CANN
+2026-03-13 17:28:21 - AscendCCrawler - INFO - 搜索关键词: 算子开发
+2026-03-13 17:28:21 - AscendCCrawler - INFO - 搜索关键词: Ascend
+2026-03-13 17:28:21 - AscendCCrawler - INFO - 搜索关键词: 昇腾
+2026-03-13 17:28:22 - AscendCCrawler - INFO - 搜索完成,共找到 0 个仓库
+2026-03-13 17:30:18 - AscendCCrawler - INFO - 使用 OAuth 令牌
+2026-03-13 17:30:18 - AscendCCrawler - INFO - AscendC 爬虫初始化完成
+2026-03-13 17:30:18 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库...
+2026-03-13 17:30:18 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC', 'CANN', '算子开发', 'Ascend', '昇腾']
+2026-03-13 17:30:18 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-13 17:30:18 - AscendCCrawler - INFO - 搜索关键词: CANN
+2026-03-13 17:30:18 - AscendCCrawler - INFO - 搜索关键词: 算子开发
+2026-03-13 17:30:19 - AscendCCrawler - INFO - 搜索关键词: Ascend
+2026-03-13 17:30:19 - AscendCCrawler - INFO - 搜索关键词: 昇腾
+2026-03-13 17:30:19 - AscendCCrawler - INFO - 搜索完成,共找到 0 个仓库
+2026-03-13 18:31:40 - AscendCCrawler - INFO - 使用 OAuth 令牌
+2026-03-13 18:31:40 - AscendCCrawler - INFO - AscendC 爬虫初始化完成
+2026-03-13 18:31:40 - AscendCCrawler - INFO - 开始批量爬取 1 个仓库
+2026-03-13 18:31:40 - AscendCCrawler - INFO - [1/1] 处理仓库: harrygt/ascendc-tutorial
+2026-03-13 18:31:40 - AscendCCrawler - INFO - 开始爬取仓库: harrygt/ascendc-tutorial
+2026-03-13 18:32:06 - AscendCCrawler - INFO - ✅ 成功爬取 harrygt/ascendc-tutorial,获取 100 个文件
+2026-03-13 18:36:30 - AscendCCrawler - INFO - 使用 OAuth 令牌
+2026-03-13 18:36:30 - AscendCCrawler - INFO - AscendC 爬虫初始化完成
+2026-03-13 18:36:30 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库...
+2026-03-13 18:36:30 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC', 'CANN', '算子开发', 'Ascend', '昇腾']
+2026-03-13 18:36:30 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-13 18:36:41 - AscendCCrawler - INFO - 关键词 'AscendC' 找到 0 个符合条件的仓库
+2026-03-13 18:36:41 - AscendCCrawler - INFO - 搜索关键词: CANN
+2026-03-13 18:36:51 - AscendCCrawler - INFO - 关键词 'CANN' 找到 0 个符合条件的仓库
+2026-03-13 18:36:51 - AscendCCrawler - INFO - 搜索关键词: 算子开发
+2026-03-13 18:37:01 - AscendCCrawler - INFO - 关键词 '算子开发' 找到 0 个符合条件的仓库
+2026-03-13 18:37:01 - AscendCCrawler - INFO - 搜索关键词: Ascend
+2026-03-13 18:37:11 - AscendCCrawler - INFO - 关键词 'Ascend' 找到 0 个符合条件的仓库
+2026-03-13 18:37:11 - AscendCCrawler - INFO - 搜索关键词: 昇腾
+2026-03-13 18:37:22 - AscendCCrawler - INFO - 关键词 '昇腾' 找到 0 个符合条件的仓库
+2026-03-13 18:37:22 - AscendCCrawler - INFO - 搜索完成,共找到 0 个仓库
