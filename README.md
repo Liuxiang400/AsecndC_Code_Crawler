@@ -6,7 +6,7 @@
 -  获取仓库基本信息（名称、描述、stars、forks等）
 -  获取README内容
 -  获取Issues列表
--  **搜索仓库功能** - 使用浏览器自动化工具（支持 Gitee 网页搜索）
+-  搜索仓库功能 - 使用浏览器自动化工具（支持 Gitee 网页搜索）
 
 ### 代码爬取功能
 -  **代码文件爬取**：递归爬取仓库的所有代码文件
@@ -123,17 +123,7 @@ export ASCENDC_OUTPUT_DIR=output/my_crawl
 python main_crawler.py
 ```
 
-
-### 4. 测试搜索功能
-```bash
-# 测试 Gitee 搜索功能
-python test_search.py
-
-# 运行完整演示（搜索 + 下载）
-python demo_search_and_download.py
-```
-
-### 5. 作为模块导入使用
+### 4. 作为模块导入使用
 
 #### 使用 Gitee 平台
 ```python
@@ -276,16 +266,6 @@ python main_crawler.py --platform github
 ```bash
 # 解决方法: 减少爬取数量
 python main_crawler.py --max-repos 3 --max-files 50
-```
-
-**Q: 搜索 API 返回空结果**
-```bash
-# Gitee 搜索功能现在使用浏览器自动化工具，应该可以正常工作
-# 如果仍然有问题，尝试：
-python test_search.py  # 测试搜索功能
-
-# 或切换到 GitHub 平台
-python main_crawler.py --platform github
 ```
 
 **Q: 搜索功能启动浏览器失败**
