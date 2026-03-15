@@ -394,3 +394,81 @@ TypeError: unsupported operand type(s) for -: 'datetime.datetime' and 'str'
 2026-03-13 19:58:56 - AscendCCrawler - INFO - 搜索关键词: AscendC
 2026-03-13 19:59:06 - AscendCCrawler - INFO - 关键词 'AscendC' 找到 0 个符合条件的仓库
 2026-03-13 19:59:06 - AscendCCrawler - INFO - 搜索完成,共找到 0 个仓库
+2026-03-14 17:15:09 - AscendCCrawler - INFO - 使用 GitHub Access Token
+2026-03-14 17:15:09 - AscendCCrawler - INFO - 使用 GitHub Crawler
+2026-03-14 17:15:09 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: github)
+2026-03-14 17:15:09 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库...
+2026-03-14 17:15:09 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC']
+2026-03-14 17:15:09 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-14 17:15:15 - AscendCCrawler - INFO - 关键词 'AscendC' 找到 100 个符合条件的仓库
+2026-03-14 17:15:15 - AscendCCrawler - INFO - 搜索完成,共找到 5 个仓库
+2026-03-14 17:15:18 - AscendCCrawler - INFO - 开始批量爬取 5 个仓库
+2026-03-14 17:15:18 - AscendCCrawler - INFO - [1/5] 处理仓库: w568w/AscendC-clangd-demo
+2026-03-14 17:15:18 - AscendCCrawler - INFO - 开始爬取仓库: w568w/AscendC-clangd-demo
+2026-03-14 17:15:19 - AscendCCrawler - INFO - 仓库默认分支: main
+2026-03-14 17:15:19 - AscendCCrawler - INFO - 配置的分支 master 未找到文件，尝试默认分支 main
+2026-03-14 17:15:21 - AscendCCrawler - INFO - ✅ 成功爬取 w568w/AscendC-clangd-demo,获取 2 个文件
+2026-03-14 17:15:21 - AscendCCrawler - INFO - [2/5] 处理仓库: wanghemeng/AscendCL_GEMM
+2026-03-14 17:15:21 - AscendCCrawler - INFO - 开始爬取仓库: wanghemeng/AscendCL_GEMM
+2026-03-14 17:15:22 - AscendCCrawler - INFO - 仓库默认分支: master
+2026-03-14 17:15:24 - AscendCCrawler - INFO - ✅ 成功爬取 wanghemeng/AscendCL_GEMM,获取 2 个文件
+2026-03-14 17:15:24 - AscendCCrawler - INFO - [3/5] 处理仓库: ASCENDynamics-NFP/AscendCoopPlatform
+2026-03-14 17:15:24 - AscendCCrawler - INFO - 开始爬取仓库: ASCENDynamics-NFP/AscendCoopPlatform
+2026-03-14 17:15:24 - AscendCCrawler - INFO - 仓库默认分支: main
+2026-03-14 17:15:25 - AscendCCrawler - INFO - 配置的分支 master 未找到文件，尝试默认分支 main
+2026-03-14 17:15:27 - AscendCCrawler - INFO - ✅ 成功爬取 ASCENDynamics-NFP/AscendCoopPlatform,获取 2 个文件
+2026-03-14 17:15:27 - AscendCCrawler - INFO - [4/5] 处理仓库: lrisguan/ascend-matvec-benchmark
+2026-03-14 17:15:27 - AscendCCrawler - INFO - 开始爬取仓库: lrisguan/ascend-matvec-benchmark
+2026-03-14 17:15:27 - AscendCCrawler - INFO - 仓库默认分支: main
+2026-03-14 17:15:28 - AscendCCrawler - INFO - 配置的分支 master 未找到文件，尝试默认分支 main
+2026-03-14 17:15:29 - AscendCCrawler - INFO - ✅ 成功爬取 lrisguan/ascend-matvec-benchmark,获取 2 个文件
+2026-03-14 17:15:29 - AscendCCrawler - INFO - [5/5] 处理仓库: motobiubiu/biubiuquik
+2026-03-14 17:15:29 - AscendCCrawler - INFO - 开始爬取仓库: motobiubiu/biubiuquik
+2026-03-14 17:15:29 - AscendCCrawler - INFO - 仓库默认分支: main
+2026-03-14 17:15:30 - AscendCCrawler - INFO - 配置的分支 master 未找到文件，尝试默认分支 main
+2026-03-14 17:15:33 - AscendCCrawler - INFO - ✅ 成功爬取 motobiubiu/biubiuquik,获取 2 个文件
+2026-03-14 17:15:33 - AscendCCrawler - INFO - 进度已保存: output/results/crawl_progress_20260314_171533.json
+2026-03-14 17:15:33 - AscendCCrawler - INFO - 进度已保存: output/results/crawl_progress_20260314_171533.json
+2026-03-14 17:15:33 - AscendCCrawler - INFO - 批量爬取完成,共处理 5 个仓库
+2026-03-14 17:15:33 - AscendCCrawler - INFO - 报告已生成: output/results/crawl_report_20260314_171533.json
+2026-03-15 17:25:52 - AscendCCrawler - INFO - 使用 Gitee OAuth 令牌
+2026-03-15 17:25:52 - AscendCCrawler - INFO - 使用 Gitee Crawler
+2026-03-15 17:25:52 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: gitee)
+2026-03-15 17:25:52 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库...
+2026-03-15 17:25:52 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC', 'CANN', '算子开发', 'Ascend', '昇腾']
+2026-03-15 17:25:52 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-15 17:26:40 - AscendCCrawler - INFO - 关键词 'AscendC' 找到 22 个符合条件的仓库
+2026-03-15 17:26:40 - AscendCCrawler - INFO - 搜索关键词: CANN
+2026-03-15 17:27:26 - AscendCCrawler - INFO - 关键词 'CANN' 找到 22 个符合条件的仓库
+2026-03-15 17:27:26 - AscendCCrawler - INFO - 搜索关键词: 算子开发
+2026-03-15 17:28:12 - AscendCCrawler - INFO - 关键词 '算子开发' 找到 22 个符合条件的仓库
+2026-03-15 17:28:12 - AscendCCrawler - INFO - 搜索关键词: Ascend
+2026-03-15 17:28:59 - AscendCCrawler - INFO - 关键词 'Ascend' 找到 22 个符合条件的仓库
+2026-03-15 17:28:59 - AscendCCrawler - INFO - 搜索关键词: 昇腾
+2026-03-15 17:29:45 - AscendCCrawler - INFO - 关键词 '昇腾' 找到 22 个符合条件的仓库
+2026-03-15 17:29:45 - AscendCCrawler - INFO - 搜索完成,共找到 5 个仓库
+2026-03-15 17:29:48 - AscendCCrawler - INFO - 开始批量爬取 5 个仓库
+2026-03-15 17:29:48 - AscendCCrawler - INFO - [1/5] 处理仓库: ascend/ascendc-api-adv
+2026-03-15 17:29:48 - AscendCCrawler - INFO - 开始爬取仓库: ascend/ascendc-api-adv
+2026-03-15 17:29:49 - AscendCCrawler - INFO - 仓库默认分支: master
+2026-03-15 17:29:50 - AscendCCrawler - INFO - ✅ 成功爬取 ascend/ascendc-api-adv,获取 2 个文件
+2026-03-15 17:29:50 - AscendCCrawler - INFO - [2/5] 处理仓库: zzudongxiang/ascendc-test
+2026-03-15 17:29:50 - AscendCCrawler - INFO - 开始爬取仓库: zzudongxiang/ascendc-test
+2026-03-15 17:29:50 - AscendCCrawler - INFO - 仓库默认分支: master
+2026-03-15 17:29:51 - AscendCCrawler - INFO - ✅ 成功爬取 zzudongxiang/ascendc-test,获取 2 个文件
+2026-03-15 17:29:51 - AscendCCrawler - INFO - [3/5] 处理仓库: aspartamej/ascend-c
+2026-03-15 17:29:51 - AscendCCrawler - INFO - 开始爬取仓库: aspartamej/ascend-c
+2026-03-15 17:29:51 - AscendCCrawler - INFO - 仓库默认分支: master
+2026-03-15 17:29:53 - AscendCCrawler - INFO - ✅ 成功爬取 aspartamej/ascend-c,获取 2 个文件
+2026-03-15 17:29:53 - AscendCCrawler - INFO - [4/5] 处理仓库: huang-heyang/ascend-c
+2026-03-15 17:29:53 - AscendCCrawler - INFO - 开始爬取仓库: huang-heyang/ascend-c
+2026-03-15 17:29:53 - AscendCCrawler - INFO - 仓库默认分支: master
+2026-03-15 17:29:54 - AscendCCrawler - INFO - ✅ 成功爬取 huang-heyang/ascend-c,获取 2 个文件
+2026-03-15 17:29:54 - AscendCCrawler - INFO - [5/5] 处理仓库: ximen-blowing-soldiers/matmul
+2026-03-15 17:29:54 - AscendCCrawler - INFO - 开始爬取仓库: ximen-blowing-soldiers/matmul
+2026-03-15 17:29:54 - AscendCCrawler - INFO - 仓库默认分支: master
+2026-03-15 17:29:57 - AscendCCrawler - INFO - ✅ 成功爬取 ximen-blowing-soldiers/matmul,获取 2 个文件
+2026-03-15 17:29:57 - AscendCCrawler - INFO - 进度已保存: output/results/crawl_progress_20260315_172957.json
+2026-03-15 17:29:57 - AscendCCrawler - INFO - 进度已保存: output/results/crawl_progress_20260315_172957.json
+2026-03-15 17:29:57 - AscendCCrawler - INFO - 批量爬取完成,共处理 5 个仓库
+2026-03-15 17:29:57 - AscendCCrawler - INFO - 报告已生成: output/results/crawl_report_20260315_172957.json

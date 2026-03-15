@@ -13,16 +13,50 @@ This is a **Gitee API crawler** - a Python application that interacts with the G
 ## Running the Application
 
 ### Installation
+
+**重要提示**: 本项目使用 `uv` 作为包管理工具，安装依赖时请使用：
+
 ```bash
-pip install -r requirements.txt
+# 安装所有依赖
+uv pip install -r requirements.txt
+
+# 安装单个包
+uv pip install <package-name>
+```
+
+**为什么不使用 pip**: `uv` 是一个更快的 Python 包管理器，由 Astral（Rust 团队）开发，比传统 pip 快 10-100 倍。
+
+### Gitee 搜索功能说明
+
+由于 Gitee 的搜索 API (`/search/repositories`) 已失效，项目现在使用 Playwright 浏览器自动化工具来实现网页搜索功能。
+
+**搜索功能特点**:
+- ✅ 使用系统已安装的 Chrome 浏览器（无需下载额外的 Chromium）
+- ✅ 支持无头模式（headless）和可视化模式
+- ✅ 自动解析 Gitee 搜索结果页面
+- ✅ 完全兼容现有的 API 接口
+
+**搜索模块位置**: `adapters/gitee/search.py`
+
+**使用示例**:
+```python
+from adapters.gitee import GiteeAPI
+
+api = GiteeAPI()
+results = api.search_repositories('AscendC', per_page=10)
 ```
 
 ### Run the main demo
 ```bash
-python gitee_api_demo.py
+python crawl_ascendC.py
 ```
 
-The main entry point is `gitee_api_demo.py`. The `main.py` file is a placeholder and is not actively used.
+测试搜索功能：
+```bash
+python test_search.py
+```
+
+The main entry point is `crawl_ascendC.py`. The `gitee_api_demo.py` file is a legacy demo.
 
 ## Architecture
 

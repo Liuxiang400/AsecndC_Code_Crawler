@@ -3,3 +3,6 @@ requests>=2.31.0
 
 # 环境变量管理
 python-dotenv>=1.0.0
+
+# 浏器自动化工具（用于 Gitee 网页搜索）
+playwright>=1.40.0

@@ -7,5 +7,6 @@ Gitee 平台适配器模块
 from .api import GiteeAPI
 from .crawler import GiteeCrawler
 from .oauth import GiteeOAuth
+from .search import GiteeWebSearcher
 
-__all__ = ['GiteeAPI', 'GiteeCrawler', 'GiteeOAuth']
+__all__ = ['GiteeAPI', 'GiteeCrawler', 'GiteeOAuth', 'GiteeWebSearcher']

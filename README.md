@@ -6,7 +6,7 @@
 -  获取仓库基本信息（名称、描述、stars、forks等）
 -  获取README内容
 -  获取Issues列表
--  搜索仓库功能
+-  **搜索仓库功能** - 使用浏览器自动化工具（支持 Gitee 网页搜索）
 
 ### 代码爬取功能
 -  **代码文件爬取**：递归爬取仓库的所有代码文件
@@ -22,8 +22,14 @@
 
 ### 1. 安装依赖
 ```bash
+# 使用 uv（推荐，更快的包管理器）
+uv pip install -r requirements.txt
+
+# 或使用传统 pip
 pip install -r requirements.txt
 ```
+
+**注意**: Gitee 搜索功能根据实际情况， 可以使用 Google Chrome 浏览器，无需下载额外的 Chromium。
 
 ### 2. 配置认证 (推荐但可选)
 
@@ -118,7 +124,16 @@ python main_crawler.py
 ```
 
 
-### 4.作为模块导入使用
+### 4. 测试搜索功能
+```bash
+# 测试 Gitee 搜索功能
+python test_search.py
+
+# 运行完整演示（搜索 + 下载）
+python demo_search_and_download.py
+```
+
+### 5. 作为模块导入使用
 
 #### 使用 Gitee 平台
 ```python
@@ -206,20 +221,20 @@ crawlDemo/
 ├── config_example.json      # 示例配置文件
 ├── utils.py                 # 工具函数
 ├── requirements.txt         # 依赖列表
-│
-├── core/                    # 核心抽象层 (新增)
+├── core/                    # 核心抽象层
 │   ├── __init__.py
 │   ├── base_api.py         # API 基类
 │   └── base_crawler.py     # 爬虫基类
 │
-├── adapters/                # 平台适配器 (新增)
+├── adapters/                # 平台适配器
 │   ├── __init__.py
 │   ├── gitee/              # Gitee 适配器
 │   │   ├── __init__.py
 │   │   ├── api.py          # GiteeAPI 实现
 │   │   ├── crawler.py      # GiteeCrawler 实现
-│   │   └── oauth.py        # Gitee OAuth 实现
-│   └── github/             # GitHub 适配器 (新增)
+│   │   ├── oauth.py        # Gitee OAuth 实现
+│   │   └── search.py       # Gitee 网页搜索实现
+│   └── github/             # GitHub 适配器
 │       ├── __init__.py
 │       ├── api.py          # GitHubAPI 实现
 │       ├── crawler.py      # GitHubCrawler 实现
@@ -228,8 +243,10 @@ crawlDemo/
 ├── output/                  # 输出目录
 │   ├── ascendc/            # 爬取的代码
 │   └── results/            # 爬取结果 JSON
-└── logs/                   # 日志目录
-    └── ascendc_crawler.log
+├── logs/                   # 日志目录
+│   └── ascendc_crawler.log
+├── QUICK_START.md          # 快速开始指南
+└── CLAUDE.md               # Claude Code 项目文档
 ```
 
 
@@ -263,10 +280,27 @@ python main_crawler.py --max-repos 3 --max-files 50
 
 **Q: 搜索 API 返回空结果**
 ```bash
-# Gitee search api 存在问题，解决方法：
-# 1. 通过其他方式获取仓库名称
-# 2. 直接通过仓库名称来获取仓库代码
-# 3. 或尝试切换到 GitHub 平台
+# Gitee 搜索功能现在使用浏览器自动化工具，应该可以正常工作
+# 如果仍然有问题，尝试：
+python test_search.py  # 测试搜索功能
+
+# 或切换到 GitHub 平台
+python main_crawler.py --platform github
+```
+
+**Q: 搜索功能启动浏览器失败**
+```bash
+# 确保系统已安装 Google Chrome
+# macOS:
+which "Google Chrome"
+
+# Linux:
+which google-chrome-stable
+
+# Windows:
+where chrome
+
+# 如果未安装，请先安装 Chrome 浏览器
 ```
 
 ## License

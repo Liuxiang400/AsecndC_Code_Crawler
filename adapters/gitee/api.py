@@ -274,6 +274,8 @@ class GiteeAPI(BaseAPI):
         """
         搜索仓库
 
+        由于 Gitee API 搜索功能已失效，现在使用网页搜索
+
         Args:
             query: 搜索关键词
             language: 编程语言过滤
@@ -289,6 +291,54 @@ class GiteeAPI(BaseAPI):
         # 限制 per_page 在合理范围内
         per_page = min(per_page, 100)
 
+        try:
+            # 使用网页搜索器
+            from .search import GiteeWebSearcher
+
+            searcher = GiteeWebSearcher(headless=True, timeout=30000)
+            results = searcher.search(query, language, sort, order, per_page)
+
+            if results:
+                print(f"✅ 找到 {len(results)} 个仓库")
+
+                # 如果需要排序，手动排序
+                if sort and results:
+                    reverse = (order == 'desc')
+                    results.sort(key=lambda x: x.get(sort, 0), reverse=reverse)
+
+            return results if results else []
+
+        except ImportError as e:
+            print(f"❌ 未安装搜索依赖: {e}")
+            print("   请运行: pip install playwright && playwright install chromium")
+            return []
+        except Exception as e:
+            print(f"❌ 搜索失败: {e}")
+            # 降级：尝试使用原有的 API 搜索（可能失败）
+            print("   尝试使用 API 搜索...")
+            return self._search_via_api(query, language, sort, order, per_page)
+
+    def _search_via_api(
+        self,
+        query: str,
+        language: Optional[str] = None,
+        sort: str = "stars",
+        order: str = "desc",
+        per_page: int = 10
+    ) -> List[Dict]:
+        """
+        通过 API 搜索仓库（已失效，作为降级方案）
+
+        Args:
+            query: 搜索关键词
+            language: 编程语言过滤
+            sort: 排序方式 (stars, forks, updated)
+            order: 排序顺序 (desc, asc)
+            per_page: 每页结果数量 (最大100)
+
+        Returns:
+            仓库列表
+        """
         # 构建搜索查询
         search_query = query
         if language:
@@ -314,16 +364,16 @@ class GiteeAPI(BaseAPI):
                 # 有些情况可能返回 {'items': [...]}
                 if 'items' in result:
                     items = result['items']
-                    print(f"✅ 找到 {len(items)} 个仓库")
+                    print(f"✅ API 找到 {len(items)} 个仓库")
                     return items
                 print(f"⚠️  API 返回未知格式: {result}")
                 return []
 
             if result:
-                print(f"✅ 找到 {len(result)} 个仓库")
+                print(f"✅ API 找到 {len(result)} 个仓库")
             return result if result else []
         except Exception as e:
-            print(f"❌ 搜索请求异常: {e}")
+            print(f"❌ API 搜索请求异常: {e}")
             return []
 
     def get_user_info(self) -> Optional[Dict]:
