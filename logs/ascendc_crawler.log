@@ -472,3 +472,55 @@ TypeError: unsupported operand type(s) for -: 'datetime.datetime' and 'str'
 2026-03-15 17:29:57 - AscendCCrawler - INFO - 进度已保存: output/results/crawl_progress_20260315_172957.json
 2026-03-15 17:29:57 - AscendCCrawler - INFO - 批量爬取完成,共处理 5 个仓库
 2026-03-15 17:29:57 - AscendCCrawler - INFO - 报告已生成: output/results/crawl_report_20260315_172957.json
+2026-03-15 18:30:41 - AscendCCrawler - INFO - 使用 Gitee OAuth 令牌
+2026-03-15 18:30:41 - AscendCCrawler - INFO - 使用 Gitee Crawler
+2026-03-15 18:30:41 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: gitee)
+2026-03-15 18:30:41 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库...
+2026-03-15 18:30:41 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC', 'CANN', '算子开发', 'Ascend', '昇腾']
+2026-03-15 18:30:41 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-15 18:31:27 - AscendCCrawler - INFO - 关键词 'AscendC' 找到 22 个符合条件的仓库
+2026-03-15 18:31:27 - AscendCCrawler - INFO - 搜索关键词: CANN
+2026-03-15 18:32:41 - AscendCCrawler - INFO - 使用 Gitee OAuth 令牌
+2026-03-15 18:32:41 - AscendCCrawler - INFO - 使用 Gitee Crawler
+2026-03-15 18:32:41 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: gitee)
+2026-03-15 18:32:41 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库...
+2026-03-15 18:32:41 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC', 'CANN', '算子开发', 'Ascend', '昇腾']
+2026-03-15 18:32:41 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-15 18:33:28 - AscendCCrawler - INFO - 关键词 'AscendC' 找到 22 个符合条件的仓库
+2026-03-15 18:33:28 - AscendCCrawler - INFO - 搜索关键词: CANN
+2026-03-15 18:34:15 - AscendCCrawler - INFO - 关键词 'CANN' 找到 22 个符合条件的仓库
+2026-03-15 18:34:15 - AscendCCrawler - INFO - 搜索关键词: 算子开发
+2026-03-15 18:35:00 - AscendCCrawler - INFO - 关键词 '算子开发' 找到 22 个符合条件的仓库
+2026-03-15 18:35:00 - AscendCCrawler - INFO - 搜索关键词: Ascend
+2026-03-15 18:35:47 - AscendCCrawler - INFO - 关键词 'Ascend' 找到 22 个符合条件的仓库
+2026-03-15 18:35:47 - AscendCCrawler - INFO - 搜索关键词: 昇腾
+2026-03-15 18:36:36 - AscendCCrawler - INFO - 关键词 '昇腾' 找到 22 个符合条件的仓库
+2026-03-15 18:36:36 - AscendCCrawler - INFO - 搜索完成,共找到 82 个仓库
+2026-03-15 18:37:34 - AscendCCrawler - INFO - 使用 GitHub Access Token
+2026-03-15 18:37:34 - AscendCCrawler - INFO - 使用 GitHub Crawler
+2026-03-15 18:37:34 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: github)
+2026-03-15 18:37:34 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库...
+2026-03-15 18:37:34 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC', 'CANN', '算子开发', 'Ascend', '昇腾']
+2026-03-15 18:37:34 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-15 18:37:39 - AscendCCrawler - INFO - 关键词 'AscendC' 找到 100 个符合条件的仓库
+2026-03-15 18:37:39 - AscendCCrawler - INFO - 搜索关键词: CANN
+2026-03-15 18:37:43 - AscendCCrawler - INFO - 关键词 'CANN' 找到 100 个符合条件的仓库
+2026-03-15 18:37:43 - AscendCCrawler - INFO - 搜索关键词: 算子开发
+2026-03-15 18:37:48 - AscendCCrawler - INFO - 关键词 '算子开发' 找到 100 个符合条件的仓库
+2026-03-15 18:37:48 - AscendCCrawler - INFO - 搜索关键词: Ascend
+2026-03-15 18:37:52 - AscendCCrawler - INFO - 关键词 'Ascend' 找到 100 个符合条件的仓库
+2026-03-15 18:37:52 - AscendCCrawler - INFO - 搜索关键词: 昇腾
+2026-03-15 18:37:57 - AscendCCrawler - INFO - 关键词 '昇腾' 找到 100 个符合条件的仓库
+2026-03-15 18:37:57 - AscendCCrawler - INFO - 搜索完成,共找到 100 个仓库
+2026-03-15 18:45:38 - AscendCCrawler - INFO - 使用 Gitee OAuth 令牌
+2026-03-15 18:45:38 - AscendCCrawler - INFO - 使用 Gitee Crawler
+2026-03-15 18:45:38 - AscendCCrawler - INFO - AscendC 爬虫初始化完成 (平台: gitee)
+2026-03-15 18:45:38 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库...
+2026-03-15 18:45:38 - AscendCCrawler - INFO - 开始搜索 AscendC 相关仓库,关键词: ['AscendC', 'CANN', '算子开发', 'Ascend', '昇腾']
+2026-03-15 18:45:38 - AscendCCrawler - INFO - 搜索关键词: AscendC
+2026-03-15 18:46:45 - AscendCCrawler - INFO - 关键词 'AscendC' 找到 37 个符合条件的仓库
+2026-03-15 18:46:45 - AscendCCrawler - INFO - 搜索关键词: CANN
+2026-03-15 18:52:12 - AscendCCrawler - INFO - 关键词 'CANN' 找到 169 个符合条件的仓库
+2026-03-15 18:52:12 - AscendCCrawler - INFO - 搜索关键词: 算子开发
+2026-03-15 18:57:39 - AscendCCrawler - INFO - 关键词 '算子开发' 找到 200 个符合条件的仓库
+2026-03-15 18:57:39 - AscendCCrawler - INFO - 搜索关键词: Ascend

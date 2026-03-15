@@ -21,10 +21,9 @@
   "results_dir": "output/results",
   "search_keywords": [
     "AscendC",
-    "CANN",
-    "算子开发",
     "Ascend",
-    "昇腾"
+    "CANN",
+    "NPU算子开发"
   ],
   "search_language": null,
   "search_sort": "stars",

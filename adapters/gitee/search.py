@@ -40,7 +40,8 @@ class GiteeWebSearcher:
         language: Optional[str] = None,
         sort: str = "stars",
         order: str = "desc",
-        per_page: int = 10
+        per_page: int = 10,
+        max_results: Optional[int] = None
     ) -> List[Dict]:
         """
         同步搜索接口
@@ -51,12 +52,17 @@ class GiteeWebSearcher:
             sort: 排序方式（stars, forks, updated）
             order: 排序顺序（desc, asc）
             per_page: 每页结果数量
+            max_results: 最大结果数量（用于自动翻页，None 表示不翻页）
 
         Returns:
             仓库列表，每个仓库包含标准格式的字典
         """
         try:
-            return asyncio.run(self._search_async(query, language, sort, order, per_page))
+            # 如果没有指定 max_results，默认使用 per_page（不翻页）
+            if max_results is None:
+                max_results = per_page
+
+            return asyncio.run(self._search_async(query, language, sort, order, per_page, max_results))
         except Exception as e:
             logger.error(f"搜索失败: {e}")
             return []
@@ -67,9 +73,10 @@ class GiteeWebSearcher:
         language: Optional[str] = None,
         sort: str = "stars",
         order: str = "desc",
-        per_page: int = 10
+        per_page: int = 10,
+        max_results: int = 100
     ) -> List[Dict]:
-        """异步搜索实现"""
+        """异步搜索实现（支持自动翻页）"""
         try:
             from playwright.async_api import async_playwright, Page
         except ImportError:
@@ -110,6 +117,7 @@ class GiteeWebSearcher:
                 # 构建搜索 URL
                 url = self._build_search_url(query, language)
                 logger.info(f"正在搜索: {url}")
+                logger.info(f"目标结果数: {max_results}（启用自动翻页）")
 
                 # 访问搜索页面
                 await page.goto(url, wait_until="networkidle", timeout=self.timeout)
@@ -117,10 +125,12 @@ class GiteeWebSearcher:
                 # 等待搜索结果加载
                 await self._wait_for_results(page)
 
-                # 解析搜索结果
-                results = await self._parse_search_results(page, per_page)
+                # 收集所有结果（支持翻页）
+                results = await self._parse_search_results_with_pagination(
+                    page, per_page, max_results
+                )
 
-                logger.info(f"找到 {len(results)} 个仓库")
+                logger.info(f"✅ 共找到 {len(results)} 个仓库")
                 return results
 
             except Exception as e:
@@ -319,4 +329,190 @@ class GiteeWebSearcher:
         except Exception as e:
             logger.debug(f"提取描述失败: {e}")
 
-        return ""
+    async def _parse_search_results_with_pagination(
+        self, page, per_page: int, max_results: int
+    ) -> List[Dict]:
+        """
+        解析搜索结果（支持自动翻页）
+
+        Args:
+            page: Playwright 页面对象
+            per_page: 每页结果数量
+            max_results: 最大结果数量
+
+        Returns:
+            仓库列表
+        """
+        all_results = []
+        page_num = 1
+        has_next_page = True
+        seen_urls = set()  # 用于去重
+
+        while has_next_page and len(all_results) < max_results:
+            logger.info(f"正在解析第 {page_num} 页...")
+
+            # 解析当前页的结果
+            page_results = await self._parse_search_results(page, per_page)
+
+            # 去重：只添加未见过的新结果
+            new_results = []
+            for result in page_results:
+                result_url = result.get('html_url', '')
+                if result_url and result_url not in seen_urls:
+                    seen_urls.add(result_url)
+                    new_results.append(result)
+
+            all_results.extend(new_results)
+            logger.info(f"第 {page_num} 页找到 {len(new_results)} 个新结果（累计: {len(all_results)}）")
+
+            # 检查是否已达到最大结果数
+            if len(all_results) >= max_results:
+                logger.info(f"已达到最大结果数 {max_results}，停止翻页")
+                break
+
+            # 尝试点击"下一页"按钮
+            has_next_page = await self._click_next_page(page)
+
+            if has_next_page:
+                page_num += 1
+                # 等待新页面加载
+                await asyncio.sleep(1)
+                await self._wait_for_results(page)
+            else:
+                logger.info(f"没有更多页面了，共搜索了 {page_num} 页")
+
+        return all_results[:max_results]
+
+    async def _click_next_page(self, page) -> bool:
+        """
+        尝试点击"下一页"按钮
+
+        Args:
+            page: Playwright 页面对象
+
+        Returns:
+            是否成功点击到下一页
+        """
+        try:
+            # Gitee 可能的"下一页"按钮选择器
+            next_button_selectors = [
+                'a[aria-label="Next"]',  # 常见的 Next 按钮
+                'a.next',  # 简单的 next 类
+                'li.next a',  # Bootstrap 风格的分页
+                'a[rel="next"]',  # 标准 rel="next"
+                '.pagination .next:not(.disabled)',  # Bootstrap 分页
+                '.page-next',  # 自定义类名
+            ]
+
+            for selector in next_button_selectors:
+                try:
+                    # 查找"下一页"按钮
+                    next_button = await page.query_selector(selector)
+
+                    if not next_button:
+                        continue
+
+                    # 检查按钮是否可点击（没有 disabled 类）
+                    is_disabled = await page.evaluate(
+                        '''(element) => {
+                            return element.classList.contains('disabled') ||
+                                   element.hasAttribute('disabled') ||
+                                   element.style.display === 'none' ||
+                                   element.style.visibility === 'hidden';
+                        }''',
+                        next_button
+                    )
+
+                    if is_disabled:
+                        logger.debug(f"下一页按钮已禁用: {selector}")
+                        continue
+
+                    # 滚动到按钮位置
+                    await next_button.scroll_into_view_if_needed()
+                    await asyncio.sleep(0.5)
+
+                    # 点击按钮
+                    await next_button.click(timeout=5000)
+                    logger.info(f"成功点击下一页按钮（使用选择器: {selector}）")
+                    return True
+
+                except Exception as e:
+                    logger.debug(f"尝试选择器 '{selector}' 失败: {e}")
+                    continue
+
+            # 如果所有选择器都失败，尝试通过查找页码来翻页
+            logger.debug("尝试通过页码翻页")
+            return await self._click_page_number(page)
+
+        except Exception as e:
+            logger.debug(f"点击下一页失败: {e}")
+            return False
+
+    async def _click_page_number(self, page) -> bool:
+        """
+        尝试通过点击页码来翻页
+        查找当前激活的页码，然后点击下一个页码
+
+        Args:
+            page: Playwright 页面对象
+
+        Returns:
+            是否成功翻页
+        """
+        try:
+            # 查找所有页码按钮
+            page_number_selectors = [
+                '.pagination a.page-link',
+                '.pagination li a',
+                '.pager a',
+            ]
+
+            for selector in page_number_selectors:
+                try:
+                    page_links = await page.query_selector_all(selector)
+                    if not page_links:
+                        continue
+
+                    # 查找当前激活的页码
+                    current_page_num = None
+                    next_page_link = None
+
+                    for link in page_links:
+                        text = await link.inner_text()
+                        text = text.strip()
+
+                        # 检查是否是激活状态
+                        is_active = await page.evaluate(
+                            '''(element) => {
+                                return element.classList.contains('active') ||
+                                       element.parentElement.classList.contains('active');
+                            }''',
+                            link
+                        )
+
+                        if is_active and text.isdigit():
+                            current_page_num = int(text)
+                            # 下一个页码应该是当前页码 + 1
+                            break
+
+                    if current_page_num is not None:
+                        # 查找下一页的链接
+                        for link in page_links:
+                            text = await link.inner_text()
+                            text = text.strip()
+
+                            if text.isdigit() and int(text) == current_page_num + 1:
+                                await link.scroll_into_view_if_needed()
+                                await asyncio.sleep(0.5)
+                                await link.click(timeout=5000)
+                                logger.info(f"成功点击页码 {text}")
+                                return True
+
+                except Exception as e:
+                    logger.debug(f"通过页码翻页失败: {e}")
+                    continue
+
+        except Exception as e:
+            logger.debug(f"页码翻页失败: {e}")
+
+        return False

@@ -296,7 +296,10 @@ class GiteeAPI(BaseAPI):
             from .search import GiteeWebSearcher
 
             searcher = GiteeWebSearcher(headless=True, timeout=30000)
-            results = searcher.search(query, language, sort, order, per_page)
+
+            # 默认翻页以获取更多结果（max_results=per_page*10）
+            max_results = per_page * 10
+            results = searcher.search(query, language, sort, order, per_page, max_results)
 
             if results:
                 print(f"✅ 找到 {len(results)} 个仓库")
