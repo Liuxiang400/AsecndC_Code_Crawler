@@ -13,6 +13,11 @@
 -  **文件过滤**：按扩展名过滤文件类型
 -  **本地保存**：保持原始目录结构保存到本地
 
+### Issue 爬取功能
+-  **精简格式**：只保存核心信息（标题、正文、评论）
+-  **完整对话**：自动获取 issue 和评论的完整内容
+-  **状态过滤**：支持 open/closed/all 三种状态
+
 ### 认证功能
 -  **OAuth2 授权**：完整的 OAuth2 授权流程，支持自动刷新令牌
 -  **Access Token**：支持使用访问令牌进行认证
@@ -80,6 +85,9 @@ python main_crawler.py --keywords "AscendC,CANN"
 
 # 限制爬取数量
 python main_crawler.py --max-repos 5 --max-files 50
+
+# 爬取 Issues（包含完整评论）
+python main_crawler.py --crawl-issues --issue-state all --max-issues 100
 
 # 只搜索不下载
 python main_crawler.py --search-only
@@ -188,6 +196,9 @@ else:
 | `--extensions` | 文件扩展名 | .py,.cpp,.h,.md 等 |
 | `--output-dir` | 输出目录 | output/ascendc |
 | `--results-dir` | 结果目录 | output/results |
+| `--crawl-issues` | 启用 issue 爬取 | 否 |
+| `--issue-state` | issue 状态 (open/closed/all) | all |
+| `--max-issues` | 每个仓库最大 issue 数 | 100 |
 
 ### API 速率限制
 
@@ -232,6 +243,11 @@ crawlDemo/
 │
 ├── output/                  # 输出目录
 │   ├── ascendc/            # 爬取的代码
+│   │   └── {owner}_{repo}/
+│   │       ├── files/      # 代码文件
+│   │       └── issues/     # Issues（精简格式）
+│   │           ├── issues_index.json
+│   │           └── issue_*.json
 │   └── results/            # 爬取结果 JSON
 ├── logs/                   # 日志目录
 │   └── ascendc_crawler.log

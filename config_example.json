@@ -32,5 +32,9 @@
   "retry_times": 3,
   "request_delay": 0.5,
   "log_level": "INFO",
-  "log_file": "logs/ascendc_crawler.log"
+  "log_file": "logs/ascendc_crawler.log",
+  "crawl_issues": true,
+  "issue_state": "all",
+  "max_issues_per_repo": 100,
+  "platform": "gitee"
 }

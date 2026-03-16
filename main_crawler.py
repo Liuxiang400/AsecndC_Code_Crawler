@@ -85,6 +85,31 @@ def parse_args():
         help='文件扩展名过滤,逗号分隔 (例如: .py,.cpp,.h)'
     )
 
+    # Issue 爬取选项
+    parser.add_argument(
+        '--crawl-issues',
+        action='store_true',
+        help='爬取仓库 issues'
+    )
+    parser.add_argument(
+        '--no-issues',
+        action='store_true',
+        help='不爬取 issues'
+    )
+    parser.add_argument(
+        '--issue-state',
+        type=str,
+        choices=['open', 'closed', 'all'],
+        default='all',
+        help='Issue 状态过滤 (默认: all)'
+    )
+    parser.add_argument(
+        '--max-issues',
+        type=int,
+        default=100,
+        help='每个仓库最大 issue 数 (默认: 100)'
+    )
+
     # 输出选项
     parser.add_argument(
         '--output-dir',
@@ -174,7 +199,10 @@ def build_config_from_args(args) -> dict:
         'days_since_update': args.days,
         'output_dir': args.output_dir,
         'results_dir': args.results_dir,
-        'branch': args.branch
+        'branch': args.branch,
+        'crawl_issues': args.crawl_issues and not args.no_issues,  # 优先处理 --no-issues
+        'issue_state': args.issue_state,
+        'max_issues_per_repo': args.max_issues
     }
 
     # 解析文件扩展名
@@ -207,6 +235,10 @@ def print_summary(crawler: AscendCCrawler, repos: list, results: dict):
     print(f"   爬取仓库数: {stats['repos_crawled']}")
     print(f"   获取文件数: {stats['files_crawled']}")
 
+    # 新增 issues 统计
+    if stats.get('issues_crawled', 0) > 0:
+        print(f"   获取 issues 数: {stats['issues_crawled']}")
+
     # 计算执行时长（处理字符串格式的 datetime）
     try:
         start_time = stats.get('start_time')
@@ -233,8 +265,19 @@ def print_summary(crawler: AscendCCrawler, repos: list, results: dict):
 
     # 仓库列表
     print(f"\n📦 爬取的仓库:")
-    for i, (repo_name, files) in enumerate(results.items(), 1):
-        print(f"   {i}. {repo_name} ({len(files)} 个文件)")
+    for i, (repo_name, data) in enumerate(results.items(), 1):
+        # 处理新的数据结构（包含 files 和 issues）
+        if isinstance(data, dict) and 'files' in data:
+            files_count = len(data.get('files', {}))
+            issues_count = len(data.get('issues', {}))
+
+            print(f"   {i}. {repo_name}")
+            print(f"      文件: {files_count} 个")
+            if issues_count > 0:
+                print(f"      Issues: {issues_count} 个")
+        else:
+            # 兼容旧的数据结构（只有文件）
+            print(f"   {i}. {repo_name} ({len(data)} 个文件)")
 
 
 def main():
@@ -302,19 +345,37 @@ def main():
         sys.exit(0)
 
     # 批量爬取
-    print("\n📥 开始爬取代码文件...")
-    results = crawler.crawl_multiple_repos(
-        repos=repos,
-        output_dir=args.output_dir,
-        save_progress=True
-    )
+    print("\n📥 开始爬取...")
+
+    crawl_issues = config.get('crawl_issues', False)
+
+    if crawl_issues:
+        print(f"📋 Issues 爬取已启用 (状态: {config['issue_state']}, 最大数量: {config['max_issues_per_repo']})")
+        results = crawler.crawl_multiple_repos_with_issues(
+            repos=repos,
+            output_dir=args.output_dir,
+            save_progress=True,
+            crawl_issues=True,
+            issue_state=config['issue_state'],
+            max_issues=config['max_issues_per_repo']
+        )
+    else:
+        print("📋 仅爬取代码文件（使用 --crawl-issues 启用 issue 爬取）")
+        results = crawler.crawl_multiple_repos(
+            repos=repos,
+            output_dir=args.output_dir,
+            save_progress=True
+        )
 
     # 记录结束时间
     crawler.stats['end_time'] = datetime.now()
 
     # 生成报告
     print("\n📊 生成爬取报告...")
-    report_file = crawler.generate_report(results)
+    if crawl_issues:
+        report_file = crawler.generate_report_with_issues(results)
+    else:
+        report_file = crawler.generate_report(results)
     print(f"   报告已保存: {report_file}")
 
     # 打印摘要

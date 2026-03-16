@@ -60,6 +60,23 @@ class BaseAPI(ABC):
         pass
 
     @abstractmethod
+    def get_issue_comments(
+        self, owner: str, repo: str, issue_number: int
+    ) -> List[Dict]:
+        """
+        获取指定 Issue 的评论
+
+        Args:
+            owner: 仓库所有者
+            repo: 仓库名称
+            issue_number: Issue 编号
+
+        Returns:
+            评论列表
+        """
+        pass
+
+    @abstractmethod
     def get_repo_contents(
         self, owner: str, repo: str, path: str = "", branch: str = "master"
     ) -> List[Dict]:

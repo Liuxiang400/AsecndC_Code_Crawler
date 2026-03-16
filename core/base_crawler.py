@@ -77,3 +77,49 @@ class BaseCrawler(ABC):
             字典，键为文件路径，值为本地保存路径
         """
         pass
+
+    @abstractmethod
+    def crawl_repo_issues(
+        self,
+        owner: str,
+        repo: str,
+        state: str = "open",
+        max_issues: int = 100,
+    ) -> List[Dict]:
+        """
+        爬取仓库的 Issues
+
+        Args:
+            owner: 仓库所有者
+            repo: 仓库名称
+            state: 状态 (open/closed/all)
+            max_issues: 最大 issue 数量
+
+        Returns:
+            Issue 列表
+        """
+        pass
+
+    @abstractmethod
+    def save_repo_issues(
+        self,
+        owner: str,
+        repo: str,
+        output_dir: str,
+        state: str = "open",
+        max_issues: int = 100,
+    ) -> Dict[str, str]:
+        """
+        爬取并保存 Issues 到本地
+
+        Args:
+            owner: 仓库所有者
+            repo: 仓库名称
+            output_dir: 输出目录
+            state: 状态 (open/closed/all)
+            max_issues: 最大 issue 数量
+
+        Returns:
+            字典，键为 issue 编号，值为保存路径
+        """
+        pass

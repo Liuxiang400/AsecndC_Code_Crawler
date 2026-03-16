@@ -67,7 +67,10 @@ class AscendCCrawler:
         'output_dir': 'output/ascendc',
         'results_dir': 'output/results',
         'file_extensions': FILE_EXTENSIONS,
-        'branch': 'master'
+        'branch': 'master',
+        'crawl_issues': False,  # 默认不爬取 issues
+        'issue_state': 'all',   # open, closed, all
+        'max_issues_per_repo': 100
     }
 
     def __init__(self, config: Optional[Dict] = None):
@@ -111,6 +114,7 @@ class AscendCCrawler:
             'repos_searched': 0,
             'repos_crawled': 0,
             'files_crawled': 0,
+            'issues_crawled': 0,  # 新增 issues 统计
             'errors': [],
             'start_time': datetime.now().isoformat(),  # 存储为字符串避免序列化问题
             'platform': platform
@@ -488,4 +492,240 @@ class AscendCCrawler:
             ext = os.path.splitext(file_path)[1].lower()
             type_counts[ext] = type_counts.get(ext, 0) + 1
         return type_counts
+
+    def crawl_single_repo_with_issues(
+        self,
+        owner: str,
+        repo: str,
+        output_dir: Optional[str] = None,
+        crawl_issues: bool = False,
+        issue_state: str = "open",
+        max_issues: int = 50
+    ) -> Dict[str, any]:
+        """
+        爬取单个仓库（文件 + issues）
+
+        Args:
+            owner: 仓库所有者
+            repo: 仓库名称
+            output_dir: 输出目录
+            crawl_issues: 是否爬取 issues
+            issue_state: issue 状态
+            max_issues: 最大 issue 数量
+
+        Returns:
+            包含文件和 issues 的字典
+        """
+        output_dir = output_dir or self.config['output_dir']
+
+        result = {
+            'files': {},
+            'issues': {}
+        }
+
+        # 1. 爬取文件（现有逻辑）
+        saved_files = self.crawl_single_repo(owner, repo, output_dir)
+        result['files'] = saved_files or {}
+
+        # 2. 爬取 issues（新增）
+        if crawl_issues:
+            logger.info(f"开始爬取 issues: {owner}/{repo}")
+            try:
+                saved_issues = self.crawler.save_repo_issues(
+                    owner=owner,
+                    repo=repo,
+                    output_dir=output_dir,
+                    state=issue_state,
+                    max_issues=max_issues
+                )
+                result['issues'] = saved_issues
+
+                # 更新统计
+                if saved_issues:
+                    self.stats['issues_crawled'] = self.stats.get('issues_crawled', 0) + len(saved_issues)
+                    logger.info(f"✅ 成功爬取 {len(saved_issues)} 个 issues")
+            except Exception as e:
+                error_msg = f"爬取 issues 失败: {str(e)}"
+                logger.error(error_msg)
+                self.stats['errors'].append(error_msg)
+
+        return result
+
+    def crawl_multiple_repos_with_issues(
+        self,
+        repos: List[Dict],
+        output_dir: Optional[str] = None,
+        save_progress: bool = True,
+        crawl_issues: bool = False,
+        issue_state: str = "open",
+        max_issues: int = 50
+    ) -> Dict[str, Dict[str, any]]:
+        """
+        批量爬取多个仓库（文件 + issues）
+
+        Args:
+            repos: 仓库列表
+            output_dir: 输出目录
+            save_progress: 是否保存进度
+            crawl_issues: 是否爬取 issues
+            issue_state: issue 状态
+            max_issues: 每个仓库最大 issue 数量
+
+        Returns:
+            结果字典，键为仓库名，值为包含文件和 issues 的字典
+        """
+        output_dir = output_dir or self.config['output_dir']
+        all_results = {}
+
+        logger.info(f"开始批量爬取 {len(repos)} 个仓库")
+
+        for i, repo in enumerate(repos, 1):
+            full_name = repo.get('full_name', '')
+            logger.info(f"[{i}/{len(repos)}] 处理仓库: {full_name}")
+
+            # 解析 owner 和 repo
+            parts = full_name.split('/')
+            if len(parts) != 2:
+                logger.warning(f"无效的仓库名: {full_name}")
+                continue
+
+            owner, repo_name = parts
+
+            # 爬取仓库（文件 + issues）
+            result = self.crawl_single_repo_with_issues(
+                owner, repo_name, output_dir,
+                crawl_issues, issue_state, max_issues
+            )
+
+            all_results[full_name] = result
+
+            # 定期保存进度
+            if save_progress and i % 5 == 0:
+                self._save_progress_with_issues(all_results, repos)
+
+        # 最终保存进度
+        if save_progress:
+            self._save_progress_with_issues(all_results, repos)
+
+        logger.info(f"批量爬取完成")
+        return all_results
+
+    def _save_progress_with_issues(self, results: Dict, repos: List[Dict]):
+        """保存爬取进度（包含 issues）"""
+        # 确保 stats 中的 datetime 对象转换为字符串
+        stats_to_save = {}
+        for key, value in self.stats.items():
+            if isinstance(value, datetime):
+                stats_to_save[key] = value.isoformat()
+            else:
+                stats_to_save[key] = value
+
+        progress_data = {
+            'timestamp': datetime.now().isoformat(),
+            'stats': stats_to_save,
+            'repos_info': repos,
+            'results_summary': {
+                repo_name: {
+                    'files_count': len(data.get('files', {})),
+                    'issues_count': len(data.get('issues', {}))
+                }
+                for repo_name, data in results.items()
+            }
+        }
+
+        # 创建结果目录
+        os.makedirs(self.config['results_dir'], exist_ok=True)
+
+        # 保存进度文件
+        timestamp_str = datetime.now().strftime('%Y%m%d_%H%M%S')
+        progress_file = os.path.join(
+            self.config['results_dir'],
+            f'crawl_progress_with_issues_{timestamp_str}.json'
+        )
+
+        with open(progress_file, 'w', encoding='utf-8') as f:
+            json.dump(progress_data, f, ensure_ascii=False, indent=2)
+
+        logger.info(f"进度已保存: {progress_file}")
+
+    def generate_report_with_issues(self, results: Dict[str, Dict[str, any]]) -> str:
+        """生成包含 issues 统计的报告"""
+        # 确保时间数据是字符串格式
+        start_time = self.stats.get('start_time')
+        end_time = self.stats.get('end_time')
+
+        if isinstance(start_time, datetime):
+            start_time = start_time.isoformat()
+        if isinstance(end_time, datetime):
+            end_time = end_time.isoformat()
+
+        # 计算时长
+        duration_seconds = 0
+        if 'start_time' in self.stats:
+            try:
+                start = self.stats['start_time']
+                if isinstance(start, str):
+                    start = datetime.fromisoformat(start)
+                end = self.stats.get('end_time', datetime.now())
+                if isinstance(end, str):
+                    end = datetime.fromisoformat(end)
+                duration_seconds = (end - start).total_seconds()
+            except Exception as e:
+                logger.warning(f"计算时长失败: {e}")
+
+        # 确保 stats 中的所有值都可以序列化
+        stats_for_report = {}
+        for key, value in self.stats.items():
+            if isinstance(value, datetime):
+                stats_for_report[key] = value.isoformat()
+            else:
+                stats_for_report[key] = value
+
+        report_data = {
+            'crawl_time': datetime.now().isoformat(),
+            'configuration': self.config,
+            'statistics': {
+                'total_repos_searched': self.stats['repos_searched'],
+                'total_repos_crawled': self.stats['repos_crawled'],
+                'total_files_crawled': self.stats['files_crawled'],
+                'total_issues_crawled': self.stats.get('issues_crawled', 0),
+                'duration_seconds': duration_seconds,
+                'start_time': start_time,
+                'end_time': end_time,
+                'errors': self.stats['errors']
+            },
+            'repositories': []
+        }
+
+        # 添加每个仓库的详细信息
+        for repo_name, data in results.items():
+            files = data.get('files', {})
+            issues = data.get('issues', {})
+
+            repo_report = {
+                'name': repo_name,
+                'files_count': len(files),
+                'issues_count': len(issues),
+                'file_types': self._analyze_file_types(files),
+                'total_size': sum(
+                    os.path.getsize(path)
+                    for path in files.values()
+                    if os.path.exists(path)
+                )
+            }
+            report_data['repositories'].append(repo_report)
+
+        # 保存报告
+        os.makedirs(self.config['results_dir'], exist_ok=True)
+        timestamp_str = datetime.now().strftime('%Y%m%d_%H%M%S')
+        report_file = os.path.join(
+            self.config['results_dir'],
+            f'crawl_report_with_issues_{timestamp_str}.json'
+        )
+
+        with open(report_file, 'w', encoding='utf-8') as f:
+            json.dump(report_data, f, ensure_ascii=False, indent=2)
+
+        logger.info(f"报告已生成: {report_file}")
+        return report_file
 
